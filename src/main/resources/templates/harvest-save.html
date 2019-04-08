@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Add a harvest</h1>
+<form th:action="@{/saveHarvest}" method="POST" th:object="${harvest}">
+    Crop: <input th:field="*{crop}"/>
+    <input type="Submit" value="Submit"/>
+</form>
+</body>
+</html>
