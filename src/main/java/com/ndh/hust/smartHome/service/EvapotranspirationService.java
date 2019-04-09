@@ -1,5 +1,8 @@
 package com.ndh.hust.smartHome.service;
 
+import com.ndh.hust.smartHome.Repository.CropRepository;
+import com.ndh.hust.smartHome.model.Crop;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -7,6 +10,14 @@ import java.util.List;
 
 @Service
 public class EvapotranspirationService {
+
+    private String cropName = "broccoli";
+
+    @Autowired
+    private CropRepository cropRepository;
+
+    private Crop crop;
+
     private double soilWaterHoldingCapicity = 0.1;
 
     private double cropCoeficientInit = 0.15;
@@ -36,6 +47,9 @@ public class EvapotranspirationService {
     private double irrigationFrequent;
 
     void testPump() {
+        crop = cropRepository.findByName(cropName);
+
+
         ET0s.add(1.1);
         ET0s.add(1.2);
         ET0s.add(1.3);
