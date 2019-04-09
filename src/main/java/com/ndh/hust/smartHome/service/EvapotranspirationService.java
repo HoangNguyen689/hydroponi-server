@@ -29,6 +29,8 @@ public class EvapotranspirationService {
 
     private Crop crop;
 
+    private List<Double> ET0s = new ArrayList<>();
+
     private double soilWaterHoldingCapicity = 0.1;
 
     private double cropCoeficientInit = 0.15;
@@ -37,7 +39,6 @@ public class EvapotranspirationService {
 
     private double effectiveDepthRoot = 0.13;
 
-    private List<Double> ET0s = new ArrayList<Double>();
     private List<Double> ETc = new ArrayList<Double>();
     private List<Double> precipitations = new ArrayList<Double>();
     private List<Double> effectivePrecipitations = new ArrayList<>();
@@ -58,10 +59,10 @@ public class EvapotranspirationService {
     private double irrigationFrequent;
 
     private double computeET0(String dayInYear) {
-        ExtraterrestrialIrradiance ex = extraterrestrialIrradianceRepository.findByDayInYear("267");
+        ExtraterrestrialIrradiance ex = extraterrestrialIrradianceRepository.findByDayInYear(dayInYear);
         double radiance = Double.valueOf(ex.getIrradiance());
 
-        List<Temperature> temps = temperatureRepository.findByDayInYear("267");
+        List<Temperature> temps = temperatureRepository.findByDayInYear(dayInYear);
 
         double maxTemp = 0,minTemp = 40;
         for (Temperature t : temps) {
@@ -74,7 +75,6 @@ public class EvapotranspirationService {
             }
         }
 
-        System.out.println("Max" + maxTemp + "Min" + minTemp);
         double avgTemp = (maxTemp + minTemp) / 2;
 
         double ET = 0.0;
@@ -87,13 +87,16 @@ public class EvapotranspirationService {
     @Scheduled(cron = "0 * * * * ?")
     void testPump() {
         crop = cropRepository.findByName(cropName);
-        System.out.println(computeET0("267"));
 
+        for(int i = 1; i < 366; i++) {
+            ET0s.add(computeET0(Integer.toString(i)));
+        }
 
-        ET0s.add(1.1);
-        ET0s.add(1.2);
-        ET0s.add(1.3);
-        ET0s.add(1.4);
+        for(Double d : ET0s) {
+            System.out.println(d);
+        }
+
+        System.out.println(crop.getKcinit());
 
         precipitations.add(20.0);
         precipitations.add(20.0);

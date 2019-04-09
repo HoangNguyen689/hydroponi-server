@@ -7,7 +7,11 @@
 <body>
 <h1>Add a harvest</h1>
 <form th:action="@{/saveHarvest}" method="POST" th:object="${harvest}">
-    Crop: <input th:field="*{crop}"/>
+    Crop: <select th:field="*{crop}" >
+            <option th:each="c : ${cropModels}" th:value="${c.name}" th:text ="${c.name}" />
+            </select>
+    Time: <input type="date" th:field="*{timeToStart}" />
+
     <input type="Submit" value="Submit"/>
 </form>
 </body>

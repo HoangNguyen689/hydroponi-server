@@ -17,4 +17,6 @@ public class Harvest {
     private String id;
 
     private String crop;
+
+    private String timeToStart;
 }
