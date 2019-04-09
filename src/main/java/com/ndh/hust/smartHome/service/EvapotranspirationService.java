@@ -1,8 +1,13 @@
 package com.ndh.hust.smartHome.service;
 
 import com.ndh.hust.smartHome.Repository.CropRepository;
+import com.ndh.hust.smartHome.Repository.ExtraterrestrialIrradianceRepository;
+import com.ndh.hust.smartHome.Repository.TemperatureRepository;
 import com.ndh.hust.smartHome.model.Crop;
+import com.ndh.hust.smartHome.model.ExtraterrestrialIrradiance;
+import com.ndh.hust.smartHome.model.Temperature;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,6 +20,12 @@ public class EvapotranspirationService {
 
     @Autowired
     private CropRepository cropRepository;
+
+    @Autowired
+    private TemperatureRepository temperatureRepository;
+
+    @Autowired
+    private ExtraterrestrialIrradianceRepository extraterrestrialIrradianceRepository;
 
     private Crop crop;
 
@@ -46,13 +57,37 @@ public class EvapotranspirationService {
     private double irrigationRate;
     private double irrigationFrequent;
 
-    private double computeET0() {
-        return 0.0;
+    private double computeET0(String dayInYear) {
+        ExtraterrestrialIrradiance ex = extraterrestrialIrradianceRepository.findByDayInYear("267");
+        double radiance = Double.valueOf(ex.getIrradiance());
+
+        List<Temperature> temps = temperatureRepository.findByDayInYear("267");
+
+        double maxTemp = 0,minTemp = 40;
+        for (Temperature t : temps) {
+            if (Double.valueOf(t.getTemperature()) > maxTemp) {
+                maxTemp = Double.valueOf(t.getTemperature());
+            }
+
+            if (Double.valueOf(t.getTemperature()) < minTemp) {
+                minTemp = Double.valueOf(t.getTemperature());
+            }
+        }
+
+        System.out.println("Max" + maxTemp + "Min" + minTemp);
+        double avgTemp = (maxTemp + minTemp) / 2;
+
+        double ET = 0.0;
+
+        ET = 0.0023 * radiance * 0.0864 / 2.45 * (avgTemp + 17.8) * Math.sqrt(maxTemp - minTemp);
+
+        return ET;
     }
 
+    @Scheduled(cron = "0 * * * * ?")
     void testPump() {
         crop = cropRepository.findByName(cropName);
-
+        System.out.println(computeET0("267"));
 
 
         ET0s.add(1.1);

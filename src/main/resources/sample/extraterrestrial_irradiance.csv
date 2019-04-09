@@ -1,4 +1,4 @@
-Year,Month,Day,Day in Year,Irradiance (W/m2)
+year,month,day,dayInYear,irradiance
 2017,9,24,267,402.18
 2017,9,25,268,400.74
 2017,9,26,269,399.28

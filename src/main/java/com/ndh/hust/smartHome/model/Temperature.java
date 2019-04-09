@@ -7,7 +7,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document
+@Document(collection = "temperature")
 @Setter
 @Getter
 @NoArgsConstructor
@@ -16,15 +16,15 @@ public class Temperature {
     @Id
     private String id;
 
-    private int year;
+    private String year;
 
-    private int month;
+    private String month;
 
-    private int day;
+    private String day;
 
-    private int dayInYear;
+    private String dayInYear;
 
     private String time;
 
-    private double temperature;
+    private String temperature;
 }

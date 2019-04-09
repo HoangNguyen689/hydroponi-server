@@ -16,13 +16,13 @@ public class ExtraterrestrialIrradiance {
     @Id
     private String id;
 
-    private int year;
+    private String year;
 
-    private int month;
+    private String month;
 
-    private int day;
+    private String day;
 
-    private int dayInYear;
+    private String dayInYear;
 
-    private double irradiance;
+    private String irradiance;
 }

@@ -15,8 +15,9 @@ public class testMongo {
     @Autowired
     public static RecordRepository repository;
 
+
     public static void main(String[] args) {
-        mongoTemplate.insert(temperature, "record");
+//        mongoTemplate.insert(temperature, "record");
 //        repository.save(temperature);
 
 //        Record r = null;
@@ -25,6 +26,7 @@ public class testMongo {
 //        } catch (NullPointerException e) {
 //            e.printStackTrace();
 //        }
-
+//        extraterrestrialIrradianceRepository.save(new ExtraterrestrialIrradiance());
+        repository.save(new Record());
     }
 }

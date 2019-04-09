@@ -1,4 +1,4 @@
-Year,Month,Day,Day In Year,Time,Tempearture
+year,month,day,dayInYear,time,temperature
 2017,9,24,267,00:00:00,28.0532
 2017,9,24,267,00:10:00,28.5003
 2017,9,24,267,00:20:00,28.6226
