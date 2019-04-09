@@ -1,18 +1,4 @@
-# Extraterrestrial Irradiance (E0) and Radiation received by a horizontal surface at the Top of the Atmosphere (ToA) during one day,,,,,,,
-# Provider,MINES ParisTech / Armines (France),,,,,,
-# More information at,http://www.soda-pro.com,,,,,,
-# Site latitude (positive means North),20.954,,,,,,
-# Site longitude (positive means East),105.756,,,,,,
-# Date beginning,2017-09-24,,,,,,
-# Date end,2019-02-28,,,,,,
-# Solar Constant,is taken here as 1367 W/m2,,,,,,
-# Extraterrestrial Irradiance E0 (W/m2),Irradiance (E0) falling on an area perpendicular to the solar rays outside the atmosphere,,,,,,
-# Irradiance (W/m2),Mean irradiance for that day at the top of atmosphere (ToA) on horizontal plane,,,,,,
-# Irradiation (kJ/m2),Daily irradiation at the top of atmosphere (ToA) on horizontal plane,,,,,,
-# Irradiation (Wh/m2),Daily irradiation at the top of atmosphere (ToA) on horizontal plane,,,,,,
-,,,,,,,
-# Extraterrestrial Irradiance (E0) and Top of Atmosphere (ToA) radiation integrated over one day,,,,,,,
-# Year,Month,Day,Day in Year,Extraterrestrial Irradiance,Irradiance (W/m2),Irradiation (kJ/m2),Irradiation (Wh/m2)
+Year,Month,Day,Day in Year,Extraterrestrial Irradiance,Irradiance (W/m2),Irradiation (kJ/m2),Irradiation (Wh/m2)
 2017,9,24,267,1359.35,402.18,34748.67,9652.41
 2017,9,25,268,1360.13,400.74,34624.04,9617.79
 2017,9,26,269,1360.91,399.28,34497.93,9582.76
@@ -536,4 +522,3 @@
 2019,2,25,56,1394.89,370.73,32031.21,8897.56
 2019,2,26,57,1394.27,372.52,32185.75,8940.49
 2019,2,27,58,1393.63,374.30,32339.80,8983.28
-,,,,,,,

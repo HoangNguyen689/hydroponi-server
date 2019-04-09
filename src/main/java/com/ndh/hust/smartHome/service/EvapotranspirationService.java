@@ -46,6 +46,10 @@ public class EvapotranspirationService {
     private double irrigationRate;
     private double irrigationFrequent;
 
+    private double computeET0() {
+        return 0.0;
+    }
+
     void testPump() {
         crop = cropRepository.findByName(cropName);
 
