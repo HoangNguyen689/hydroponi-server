@@ -14,9 +14,7 @@ public abstract class MqttService implements MqttCallback {
 
     MqttService (String clientId, String subcribeTopic) {
 
-        options.setAutomaticReconnect(true);
         options.setCleanSession(true);
-        options.setConnectionTimeout(10);
 
         this.subcribeTopic = subcribeTopic;
 

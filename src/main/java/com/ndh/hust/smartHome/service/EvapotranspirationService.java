@@ -3,6 +3,7 @@ package com.ndh.hust.smartHome.service;
 import com.ndh.hust.smartHome.Repository.CropRepository;
 import com.ndh.hust.smartHome.Repository.ExtraterrestrialIrradianceRepository;
 import com.ndh.hust.smartHome.Repository.TemperatureRepository;
+import com.ndh.hust.smartHome.model.Command;
 import com.ndh.hust.smartHome.model.Crop;
 import com.ndh.hust.smartHome.model.ExtraterrestrialIrradiance;
 import com.ndh.hust.smartHome.model.Temperature;
@@ -17,6 +18,9 @@ import java.util.List;
 public class EvapotranspirationService {
 
     private String cropName = "broccoli";
+
+    @Autowired
+    private MqttControlService mqttControlService;
 
     @Autowired
     private CropRepository cropRepository;
@@ -34,8 +38,6 @@ public class EvapotranspirationService {
     private double soilWaterHoldingCapicity = 0.1;
 
     private double cropCoeficientInit = 0.15;
-    private double cropCoeficientMiddle = 0.9;
-    private double cropCoeficientLast = 0.75;
 
     private double effectiveDepthRoot = 0.13;
 
@@ -84,19 +86,14 @@ public class EvapotranspirationService {
         return ET;
     }
 
-    @Scheduled(cron = "0 * * * * ?")
-    void testPump() {
+
+    private void testPump() {
         crop = cropRepository.findByName(cropName);
 
         for(int i = 1; i < 366; i++) {
             ET0s.add(computeET0(Integer.toString(i)));
         }
 
-        for(Double d : ET0s) {
-            System.out.println(d);
-        }
-
-        System.out.println(crop.getKcinit());
 
         precipitations.add(20.0);
         precipitations.add(20.0);
@@ -121,6 +118,13 @@ public class EvapotranspirationService {
 
         irrigationFrequent = MAD * TAW / grossIrrigation;
 
+    }
+
+    @Scheduled(cron = "0 0 16 * * ?")
+    public void ETDecision() {
+        testPump();
+        Command command = new Command("dev1", "PUMP", "ON", Double.toString(irrigationRate));
+        mqttControlService.publishCommand(command);
     }
 
 }

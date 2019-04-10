@@ -5,14 +5,22 @@
     <title>Title</title>
 </head>
 <body>
-<h1>Add a harvest</h1>
-<form th:action="@{/saveHarvest}" method="POST" th:object="${harvest}">
-    Crop: <select th:field="*{crop}" >
-            <option th:each="c : ${cropModels}" th:value="${c.name}" th:text ="${c.name}" />
+<h1>Harvest</h1>
+<div>
+    <form th:action="@{/saveHarvest}" method="POST" th:object="${harvest}">
+        <div>
+            Crop:
+            <select th:field="*{crop}" >
+                <option th:each="c : ${cropModels}" th:value="${c.name}" th:text ="${c.name}" />
             </select>
-    Time: <input type="date" th:field="*{timeToStart}" />
+        </div>
+        <div>
+            Time: <input type="date" th:field="*{timeToStart}" />
+        </div>
 
-    <input type="Submit" value="Submit"/>
-</form>
+        <input type="Submit" value="Submit"/>
+    </form>
+
+</div>
 </body>
 </html>
