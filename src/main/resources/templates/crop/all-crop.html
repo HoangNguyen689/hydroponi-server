@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<tr>
+    <th>Name</th>
+    <th>Init</th>
+    <th>Dev</th>
+    <th>Mid</th>
+    <th>Late</th>
+    <th>Total</th>
+    <br/>
+</tr>
+<tr th:each="c : ${crops}">
+    <td th:text="${c.getName()}"></td>
+    <td th:text="${c.getInit()}"></td>
+    <td th:text="${c.getDev()}"></td>
+    <td th:text="${c.getMid()}"></td>
+    <td th:text="${c.getLate()}"></td>
+    <td th:text="${c.getTotal()}"></td>
+    <br/>
+</tr>
+<p>Add a crop <a href="/crop/add-crop">here</a></p>
+</body>
+</html>

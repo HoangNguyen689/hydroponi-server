@@ -26,8 +26,8 @@ public class MarkovService {
 
     private double humidPrevious = 0.0;
 
-    private final double THRESHOLE1 = 0.15;
-    private final double THRESHOLE2 = 0.59;
+    private final double THRESHOLE1 = 0.6;
+    private final double THRESHOLE2 = 0.8;
 
     private final int S_low = -1;
     private final int S_ok = 0;

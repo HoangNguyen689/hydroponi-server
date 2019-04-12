@@ -19,4 +19,10 @@ public class Harvest {
     private String crop;
 
     private String timeToStart;
+
+    private int pumpCapacity;
+
+    private double fieldArea;
+
+    private String method;
 }
