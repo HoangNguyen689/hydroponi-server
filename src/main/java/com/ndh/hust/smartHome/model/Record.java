@@ -31,7 +31,6 @@ public class Record {
 
     public Record(double humidity) {
         this.humidity = humidity;
-        timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.ndh.hust.smartHome.service;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.mongodb.MongoException;
@@ -11,11 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.Date;
 
 @Service
 @Log4j2(topic = "MQTT_COLLECT")
@@ -50,7 +49,10 @@ public class MqttCollectService extends MqttService {
                 r = objectMapper.readValue(msg,Record.class);
                 listRecordTemp.add(r);
             } catch (UnrecognizedPropertyException ue) {
-                System.out.println("Failed to excute message! Exiting ...");
+                log.error("Failed to excute message! Exiting ...");
+                return;
+            } catch (JsonParseException jpe) {
+                log.error("Failed to parse message! Exiting ...");
                 return;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -60,22 +62,36 @@ public class MqttCollectService extends MqttService {
 
             if (recordCount == 10) {
                 Record rDAO = new Record();
+
                 double humidDAO = 0.0;
+                double tempDAO = 0.0;
+                double moisDAO = 0.0;
+
                 rDAO.setDeviceId(listRecordTemp.get(0).getDeviceId());
+
                 for (Record recordTemp : listRecordTemp) {
                     humidDAO += recordTemp.getHumidity();
+                    tempDAO += recordTemp.getTemperature();
+                    moisDAO += recordTemp.getMoisture();
                 }
                 humidDAO /= listRecordTemp.size();
+                tempDAO /= listRecordTemp.size();
+                moisDAO /= listRecordTemp.size();
+
                 rDAO.setHumidity(humidDAO);
-                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmm").format(Calendar.getInstance().getTime());
+                rDAO.setTemperature(tempDAO);
+                rDAO.setMoisture(moisDAO);
+
+                String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
                 rDAO.setTimeStamp(timeStamp);
+
                 try {
                     repository.insert(rDAO);
                 } catch (MongoException me) {
                     me.printStackTrace();
                     return;
                 }
-
+                log.info("Save in database!");
                 recordCount = 0;
                 listRecordTemp.clear();
             }

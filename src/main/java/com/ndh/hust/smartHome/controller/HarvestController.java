@@ -3,6 +3,7 @@ package com.ndh.hust.smartHome.controller;
 import com.ndh.hust.smartHome.Repository.CropRepository;
 import com.ndh.hust.smartHome.Repository.HarvestRepository;
 import com.ndh.hust.smartHome.model.Harvest;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,7 +28,9 @@ public class HarvestController {
 
     @RequestMapping("/saveHarvest")
     public String insertHarvest(@ModelAttribute("Harvest") Harvest harvest) {
-
+        DateTime dt = new DateTime(harvest.getTimeToStart());
+        int dayOfYear = dt.getDayOfYear();
+        harvest.setDayOfYear(dayOfYear);
         harvestRepository.save(harvest);
         return "index";
     }

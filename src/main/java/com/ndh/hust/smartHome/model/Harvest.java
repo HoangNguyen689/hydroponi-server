@@ -20,6 +20,8 @@ public class Harvest {
 
     private String timeToStart;
 
+    private int dayOfYear;
+
     private int pumpCapacity;
 
     private double fieldArea;

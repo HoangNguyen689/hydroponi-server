@@ -8,11 +8,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+
+import java.util.*;
 
 @EnableScheduling
 @Service
@@ -22,9 +19,13 @@ public class MarkovService {
     private MqttControlService mqttControlService;
 
     @Autowired
+    private TimeService timeService;
+
+    @Autowired
     private RecordRepository repository;
 
-    private double humidPrevious = 0.0;
+    private double moisPre = 0.0;
+    private double moisCur = 0.0;
 
     private final double THRESHOLE1 = 0.6;
     private final double THRESHOLE2 = 0.8;
@@ -53,44 +54,61 @@ public class MarkovService {
         return w;
     }
 
-    public int actionChoose(double humidCurrent) {
+    public int actionChoose() {
 
-        ArrayList<Record> listLast2Record = new ArrayList<>(repository.findTop2ByOrderByTimeStampDesc());
+        Date timeNow = timeService.getTimeNowInHour();
+        String timeCur = timeService.getTimeString(timeNow);
+        String timePre = timeService.getTimeString(timeService.getTimeInPreviousHour(timeNow));
 
-        humidPrevious = listLast2Record.get(1).getHumidity();
+        Record moisCurRecord = repository.findByTimeStampBetween(timePre, timeCur);
+
+        if (moisCurRecord != null) {
+            moisCur = moisCurRecord.getMoisture();
+            System.out.println(moisCur);
+        } else {
+            moisCur = 0.6;
+        }
+
+        Date timeYesterday = timeService.getTimeYesterday(timeService.getTimeNowInHour());
+        String timeCurYesterday = timeService.getTimeString(timeYesterday);
+        String timePreYesterday = timeService.getTimeString(timeService.getTimeInPreviousHour(timeYesterday));
+
+        Record moisPreRecord = repository.findByTimeStampBetween(timePreYesterday, timeCurYesterday);
+        if (moisPreRecord != null) {
+            moisPre = moisPreRecord.getMoisture();
+        } else {
+            moisPre = 0.58;
+        }
 
         double evarporationRate = 0.0;
         int stateCurrent = 0;
         int i;
 
-        if(humidCurrent < THRESHOLE1) {
+        if(moisCur < THRESHOLE1) {
             stateCurrent = S_low;
         }
-        else if(THRESHOLE1 <= humidCurrent && humidCurrent <= THRESHOLE2) {
+        else if(THRESHOLE1 <= moisCur && moisCur <= THRESHOLE2) {
             stateCurrent = S_ok;
         }
         else {
             stateCurrent = S_high;
         }
 
-        /*
-         * Caculate evarporation rate
-         */
-        evarporationRate = humidCurrent - humidPrevious;
+        evarporationRate = moisCur - moisPre;
 
         /*
          * Caculate Reward for 3 actions
          */
-        double humidNext;
+        double moisNext;
         double penalty;
         double alpha;
         double reward = -200;
         double r;
         int action = 0;
         for(i = 0; i <= 2; i++) {
-            humidNext = humidCurrent + humidIncreaseByAction(i) - evarporationRate;
+            moisNext = moisCur + humidIncreaseByAction(i) - evarporationRate;
 
-            if(THRESHOLE1 <= humidNext && humidNext <= THRESHOLE2) {
+            if(THRESHOLE1 <= moisNext && moisNext <= THRESHOLE2) {
                 penalty = 0;
             }
             else {
@@ -105,15 +123,15 @@ public class MarkovService {
                 action = i;
             }
         }
-        humidPrevious = humidCurrent;
+
         return action;
     }
 
     //@Scheduled(cron = "0 45/5 12 * * ?")
-    //@Scheduled(cron = "0 0/1 * * * ?")
+    @Scheduled(cron = "0 * * * * ?")
     public void markovDecision() {
         Random rand = new Random();
-        int actionXXX = actionChoose(0.1 + rand.nextDouble());
+        int actionXXX = actionChoose();
         System.out.println();
 
         Command command = new Command("dev1","PUMP","ON", Integer.toString(actionXXX));
