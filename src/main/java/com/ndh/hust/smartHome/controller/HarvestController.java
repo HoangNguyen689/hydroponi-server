@@ -4,6 +4,8 @@ import com.ndh.hust.smartHome.Repository.CropRepository;
 import com.ndh.hust.smartHome.Repository.HarvestRepository;
 import com.ndh.hust.smartHome.model.Harvest;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,8 +31,11 @@ public class HarvestController {
     @RequestMapping("/saveHarvest")
     public String insertHarvest(@ModelAttribute("Harvest") Harvest harvest) {
         DateTime dt = new DateTime(harvest.getTimeToStart());
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd");
         int dayOfYear = dt.getDayOfYear();
         harvest.setDayOfYear(dayOfYear);
+        harvest.setTimeToEnd(dtf.print(dt.plusDays(cropRepository.findByName(harvest.getCrop()).getTotal())));
+        harvest.setActive(true);
         harvestRepository.save(harvest);
         return "index";
     }

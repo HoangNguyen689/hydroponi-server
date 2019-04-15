@@ -1,22 +1,15 @@
 package com.ndh.hust.smartHome.service;
 
 import com.ndh.hust.smartHome.Repository.RecordRepository;
-import com.ndh.hust.smartHome.model.Command;
 import com.ndh.hust.smartHome.model.Record;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 
 import java.util.*;
 
-@EnableScheduling
 @Service
 public class MarkovService {
-
-    @Autowired
-    private MqttControlService mqttControlService;
 
     @Autowired
     private TimeService timeService;
@@ -125,17 +118,6 @@ public class MarkovService {
         }
 
         return action;
-    }
-
-    //@Scheduled(cron = "0 45/5 12 * * ?")
-    @Scheduled(cron = "0 * * * * ?")
-    public void markovDecision() {
-        Random rand = new Random();
-        int actionXXX = actionChoose();
-        System.out.println();
-
-        Command command = new Command("dev1","PUMP","ON", Integer.toString(actionXXX));
-        mqttControlService.publishCommand(command);
     }
 
 }
