@@ -1,19 +1,13 @@
 package com.ndh.hust.smartHome.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
-
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
 @Document
+@NoArgsConstructor
 public class Record {
     @Id
     public String id;
@@ -29,11 +23,6 @@ public class Record {
     public double radian;
 
     public String timeStamp;
-
-
-    public Record(double humidity) {
-        this.humidity = humidity;
-    }
 
     @Override
     public String toString() {

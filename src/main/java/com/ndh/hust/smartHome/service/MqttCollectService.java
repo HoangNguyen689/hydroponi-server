@@ -82,6 +82,8 @@ public class MqttCollectService extends MqttService {
                 rDAO.setTemperature(tempDAO);
                 rDAO.setMoisture(moisDAO);
 
+                rDAO.setRadian(450.0);
+
                 String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
                 rDAO.setTimeStamp(timeStamp);
 

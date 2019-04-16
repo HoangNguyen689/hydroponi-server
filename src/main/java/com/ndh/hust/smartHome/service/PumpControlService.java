@@ -47,8 +47,8 @@ public class PumpControlService implements SchedulingConfigurer {
         threadPoolTaskScheduler.setPoolSize(10);
         threadPoolTaskScheduler.setThreadNamePrefix("schedule-thread");
         threadPoolTaskScheduler.initialize();
-//        job1(threadPoolTaskScheduler);
-        jobEvapoSingle(threadPoolTaskScheduler);
+        job1(threadPoolTaskScheduler);
+//        jobEvapoSingle(threadPoolTaskScheduler);
         jobWaitForHarvestStart(threadPoolTaskScheduler);
         this.taskScheduler = threadPoolTaskScheduler;
         taskRegistrar.setTaskScheduler(threadPoolTaskScheduler);
@@ -61,6 +61,11 @@ public class PumpControlService implements SchedulingConfigurer {
                 synchronized (this)  {
                     while (!flag) {
                         System.out.println("Wait for harvest!");
+                        try {
+                            wait(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
                 System.out.println(Thread.currentThread().getName() + "The task1 excuted at" + new Date());

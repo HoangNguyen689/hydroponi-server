@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 
 
 public class testMongo {
-    static Record temperature = new Record(40);
+    static Record temperature = new Record();
 
     static MongoTemplate mongoTemplate = new MongoTemplate(new MongoClient(), "smartHome");
 

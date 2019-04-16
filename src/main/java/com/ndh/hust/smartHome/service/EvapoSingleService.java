@@ -58,7 +58,7 @@ public class EvapoSingleService {
         double ETc = kc * computeET();
 
         double amount = ETc / 1000 * harvest.getFieldArea();
-        int timeToPump = (int) amount / harvest.getPumpCapacity();
+        int timeToPump =  (int)(amount / harvest.getPumpCapacity());
         return timeToPump;
     }
 }

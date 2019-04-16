@@ -67,9 +67,8 @@ public class HelpService {
         if (records == null)
             return 0.0;
         for(Record r : records) {
-            radian = r.getRadian();
+            radian += r.getRadian();
         }
-
         radian /= records.size();
         return radian;
     }
@@ -102,8 +101,9 @@ public class HelpService {
             try {
                 Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(harvest.getTimeToStart());
                 DateTime startDateTime = new DateTime(startDate);
-                DateTime initDateTime = startDateTime.plus(init);
-                DateTime midDateTime = initDateTime.plus(mid);
+                DateTime initDateTime = startDateTime.plusDays(init);
+                DateTime midDateTime = initDateTime.plusDays(mid);
+
                 if (date.before(initDateTime.toDate())) {
                     return Constant.STATE_INIT;
                 } else if (date.before(midDateTime.toDate())) {
