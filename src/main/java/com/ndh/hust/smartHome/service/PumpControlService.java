@@ -23,6 +23,9 @@ public class PumpControlService implements SchedulingConfigurer {
     MarkovService markovService;
 
     @Autowired
+    EvapoSingleService evapoSingleService;
+
+    @Autowired
     MqttControlService mqttControlService;
 
     @Autowired
@@ -35,6 +38,7 @@ public class PumpControlService implements SchedulingConfigurer {
     TaskScheduler taskScheduler;
     private ScheduledFuture<?> job1;
     private ScheduledFuture<?> jobWaitForHarvestStart;
+    private ScheduledFuture<?> jobEvapoSingle;
     private volatile boolean flag = false;
 
     @Override
@@ -43,7 +47,8 @@ public class PumpControlService implements SchedulingConfigurer {
         threadPoolTaskScheduler.setPoolSize(10);
         threadPoolTaskScheduler.setThreadNamePrefix("schedule-thread");
         threadPoolTaskScheduler.initialize();
-        job1(threadPoolTaskScheduler);
+//        job1(threadPoolTaskScheduler);
+        jobEvapoSingle(threadPoolTaskScheduler);
         jobWaitForHarvestStart(threadPoolTaskScheduler);
         this.taskScheduler = threadPoolTaskScheduler;
         taskRegistrar.setTaskScheduler(threadPoolTaskScheduler);
@@ -60,13 +65,40 @@ public class PumpControlService implements SchedulingConfigurer {
                 }
                 System.out.println(Thread.currentThread().getName() + "The task1 excuted at" + new Date());
                 int action = markovService.actionChoose();
+                int time = 0;
+                switch (action) {
+                    case 0: time = 10; break;
+                    case 1: time = 20; break;
+                    case 2: time = 30; break;
+                }
 
-                Command command = new Command("dev1","PUMP","ON", Integer.toString(action));
+                Command command = new Command("dev1","PUMP","ON", Integer.toString(time));
                 mqttControlService.publishCommand(command);
 
             }
         }, triggerContext -> {
             String cronExp="0/5 * * * * ?";
+            return new CronTrigger(cronExp).nextExecutionTime(triggerContext);
+        });
+    }
+
+    private void jobEvapoSingle(TaskScheduler taskScheduler) {
+        jobEvapoSingle = taskScheduler.schedule(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (this)  {
+                    while (!flag) {
+                        System.out.println("Wait for harvest!");
+                    }
+                }
+                System.out.println(Thread.currentThread().getName() + "The task2 excuted at" + new Date());
+                int time = evapoSingleService.comuteTimeToPump();
+                Command command = new Command("dev1","PUMP","ON", Integer.toString(time));
+                mqttControlService.publishCommand(command);
+
+            }
+        }, triggerContext -> {
+            String cronExp="0/10 * * * * ?";
             return new CronTrigger(cronExp).nextExecutionTime(triggerContext);
         });
     }

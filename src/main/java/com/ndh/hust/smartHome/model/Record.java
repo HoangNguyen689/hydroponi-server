@@ -26,6 +26,8 @@ public class Record {
 
     public double moisture;
 
+    public double radian;
+
     public String timeStamp;
 
 

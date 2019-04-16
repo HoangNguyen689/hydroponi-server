@@ -53,7 +53,7 @@ public class MarkovService {
         String timeCur = timeService.getTimeString(timeNow);
         String timePre = timeService.getTimeString(timeService.getTimeInPreviousHour(timeNow));
 
-        Record moisCurRecord = repository.findByTimeStampBetween(timePre, timeCur);
+        Record moisCurRecord = repository.findTopByTimeStampBetween(timePre, timeCur);
 
         if (moisCurRecord != null) {
             moisCur = moisCurRecord.getMoisture();
@@ -66,7 +66,7 @@ public class MarkovService {
         String timeCurYesterday = timeService.getTimeString(timeYesterday);
         String timePreYesterday = timeService.getTimeString(timeService.getTimeInPreviousHour(timeYesterday));
 
-        Record moisPreRecord = repository.findByTimeStampBetween(timePreYesterday, timeCurYesterday);
+        Record moisPreRecord = repository.findTopByTimeStampBetween(timePreYesterday, timeCurYesterday);
         if (moisPreRecord != null) {
             moisPre = moisPreRecord.getMoisture();
         } else {

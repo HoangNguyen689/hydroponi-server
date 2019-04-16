@@ -4,6 +4,9 @@ import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -37,4 +40,23 @@ public class TimeService {
         return calendar.getTime();
     }
 
+    public Date localDateTimeToDate(LocalDateTime localDateTime) {
+        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    public LocalDateTime dateToLocalDateTime(Date date) {
+        return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+    }
+
+    public Date startOfDay(Date date) {
+        LocalDateTime localDateTime = dateToLocalDateTime(date);
+        LocalDateTime start = localDateTime.with(LocalTime.MIN);
+        return localDateTimeToDate(start);
+    }
+
+    public Date endOfDay(Date date) {
+        LocalDateTime localDateTime = dateToLocalDateTime(date);
+        LocalDateTime end = localDateTime.with(LocalTime.MAX);
+        return localDateTimeToDate(end);
+    }
 }

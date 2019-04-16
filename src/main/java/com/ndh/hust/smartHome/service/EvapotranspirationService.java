@@ -1,9 +1,6 @@
 package com.ndh.hust.smartHome.service;
 
-import com.ndh.hust.smartHome.Repository.CropRepository;
-import com.ndh.hust.smartHome.Repository.ExtraterrestrialIrradianceRepository;
-import com.ndh.hust.smartHome.Repository.PrecipitationRepository;
-import com.ndh.hust.smartHome.Repository.TemperatureRepository;
+import com.ndh.hust.smartHome.Repository.*;
 import com.ndh.hust.smartHome.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -31,6 +28,9 @@ public class EvapotranspirationService {
 
     @Autowired
     private PrecipitationRepository precipitationRepository;
+
+    @Autowired
+    private HarvestRepository harvestRepository;
 
     private Crop crop;
 
