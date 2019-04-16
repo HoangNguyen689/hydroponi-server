@@ -3,12 +3,14 @@ package com.ndh.hust.smartHome.controller;
 import com.ndh.hust.smartHome.Repository.CropRepository;
 import com.ndh.hust.smartHome.Repository.HarvestRepository;
 import com.ndh.hust.smartHome.model.Harvest;
+import com.ndh.hust.smartHome.service.TimeService;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -20,6 +22,9 @@ public class HarvestController {
 
     @Autowired
     private CropRepository cropRepository;
+
+    @Autowired
+    private TimeService timeService;
 
     @RequestMapping("harvest-save")
     public String saveHarvest(Model model) {
@@ -38,5 +43,12 @@ public class HarvestController {
         harvest.setActive(true);
         harvestRepository.save(harvest);
         return "index";
+    }
+
+    @GetMapping("/harvest")
+    public String showHarvest(Model model) {
+        model.addAttribute("harvest", harvestRepository.findTopByActive(true));
+        model.addAttribute("timeNow", timeService.getTimeNow());
+        return "harvest";
     }
 }

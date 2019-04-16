@@ -1,7 +1,6 @@
 package com.ndh.hust.smartHome.fileProcess;
 
 import com.ndh.hust.smartHome.fileProcess.beans.CSVBean;
-import com.ndh.hust.smartHome.fileProcess.beans.Precipitation;
 import com.ndh.hust.smartHome.fileProcess.beans.Temperature;
 
 import java.nio.file.Path;
@@ -12,7 +11,6 @@ public class mainCSV {
     public static void main(String[] args) throws Exception {
 
         CSVMappedToBean csvMappedToBean = new CSVMappedToBean();
-        //Path path = Paths.get(ClassLoader.getSystemResource("sample/precipitation.csv").getPath());
         Path path = Paths.get(ClassLoader.getSystemResource("sample/temperature.csv").getPath());
         List<CSVBean> precipitations = csvMappedToBean.beanBuilder(path, Temperature.class);
 //        for (CSVBean c : precipitations) {

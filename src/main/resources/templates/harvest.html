@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="commons/header :: head">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="container">
+    <div th:replace="commons/header :: header">...</div>
+</div>
+Crop: <p th:text="${harvest.getCrop()}" ></p>
+Day Start: <p th:text="${harvest.getTimeToStart()}" ></p>
+Today: <p th:text="${timeNow}" ></p>
+</body>
+</html>

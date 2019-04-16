@@ -57,7 +57,6 @@ public class MarkovService {
 
         if (moisCurRecord != null) {
             moisCur = moisCurRecord.getMoisture();
-            System.out.println(moisCur);
         } else {
             moisCur = 0.6;
         }

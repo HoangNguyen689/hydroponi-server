@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+<head th:replace="commons/header :: head">
+
 </head>
 <body>
+<div class="container">
+    <div th:replace="commons/header :: header">...</div>
+</div>
 <h1>Harvest</h1>
 <div>
     <form th:action="@{/saveHarvest}" method="POST" th:object="${harvest}">

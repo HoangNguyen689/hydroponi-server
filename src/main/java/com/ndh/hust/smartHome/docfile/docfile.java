@@ -34,7 +34,6 @@ public class docfile {
     }
 
     public static void main(String[] args) {
-        Path path = Paths.get(ClassLoader.getSystemResource("sample/temperature.csv").getPath());
 
         HashMap<Tripple, String> hashMap = new HashMap<>();
         try {
@@ -44,7 +43,6 @@ public class docfile {
             String[] ele;
 
             while ((text1 = br0.readLine()) != null) {
-//                System.out.println(text1);
                 ele = text1.split(",");
                 tripples.add(new Tripple(Integer.valueOf(ele[0]),Integer.valueOf(ele[1]),Integer.valueOf(ele[2])));
                 hashMap.put(tripples.get(tripples.size() - 1 ), ele[3]);
@@ -79,11 +77,11 @@ public class docfile {
                         String[] time = element[0].split(" ");
                         String[] date = time[0].split("-");
 
-                        result = date[0] + "," + date[1] + "," + date[2] + "," +
+                        result = element[0] + "," +
                                 hashMap.get(findTripple(Integer.valueOf(date[0]),
                                         Integer.valueOf(date[1]),
                                         Integer.valueOf(date[2]))) + "," +
-                                time[1] + "," + element[1];
+                                 "," + element[1];
 //                        System.out.println(result);
                         bw.write(result + "\n");
 
