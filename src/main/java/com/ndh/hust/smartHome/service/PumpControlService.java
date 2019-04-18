@@ -20,25 +20,32 @@ import java.util.concurrent.ScheduledFuture;
 @EnableScheduling
 public class PumpControlService implements SchedulingConfigurer {
     @Autowired
-    MarkovService markovService;
+    private MarkovService markovService;
 
     @Autowired
-    EvapoSingleService evapoSingleService;
+    private EvapoSingleService evapoSingleService;
 
     @Autowired
-    MqttControlService mqttControlService;
+    private EvapoHistoryService evapoHistoryService;
 
     @Autowired
-    HarvestRepository harvestRepository;
+    private MqttControlService mqttControlService;
 
     @Autowired
-    TimeService timeService;
+    private HarvestRepository harvestRepository;
+
+    @Autowired
+    private TimeService timeService;
+
+    @Autowired
+    private HelpService helpService;
 
 
     TaskScheduler taskScheduler;
-    private ScheduledFuture<?> job1;
+    private ScheduledFuture<?> jobMarkov;
     private ScheduledFuture<?> jobWaitForHarvestStart;
     private ScheduledFuture<?> jobEvapoSingle;
+    private ScheduledFuture<?> jobEvapoHistory;
     private volatile boolean flag = false;
 
     @Override
@@ -47,15 +54,16 @@ public class PumpControlService implements SchedulingConfigurer {
         threadPoolTaskScheduler.setPoolSize(10);
         threadPoolTaskScheduler.setThreadNamePrefix("schedule-thread");
         threadPoolTaskScheduler.initialize();
-        job1(threadPoolTaskScheduler);
+//        jobMarkov(threadPoolTaskScheduler);
 //        jobEvapoSingle(threadPoolTaskScheduler);
+        jobEvapoHistory(threadPoolTaskScheduler);
         jobWaitForHarvestStart(threadPoolTaskScheduler);
         this.taskScheduler = threadPoolTaskScheduler;
         taskRegistrar.setTaskScheduler(threadPoolTaskScheduler);
     }
 
-    private void job1(TaskScheduler taskScheduler) {
-        job1 = taskScheduler.schedule(new Runnable() {
+    private void jobMarkov(TaskScheduler taskScheduler) {
+        jobMarkov = taskScheduler.schedule(new Runnable() {
             @Override
             public void run() {
                 synchronized (this)  {
@@ -93,17 +101,48 @@ public class PumpControlService implements SchedulingConfigurer {
             public void run() {
                 synchronized (this)  {
                     while (!flag) {
-                        System.out.println("Wait for harvest!");
+                        try {
+                            wait(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
+
                 System.out.println(Thread.currentThread().getName() + "The task2 excuted at" + new Date());
-                int time = evapoSingleService.comuteTimeToPump();
+                int time = evapoSingleService.computeTimeToPump();
                 Command command = new Command("dev1","PUMP","ON", Integer.toString(time));
                 mqttControlService.publishCommand(command);
 
             }
         }, triggerContext -> {
             String cronExp="0/10 * * * * ?";
+            return new CronTrigger(cronExp).nextExecutionTime(triggerContext);
+        });
+    }
+
+    private void jobEvapoHistory(TaskScheduler taskScheduler) {
+        jobEvapoHistory = taskScheduler.schedule(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (this)  {
+                    while (!flag) {
+                        try {
+                            wait(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                System.out.println(Thread.currentThread().getName() + "The task3 excuted at" + new Date());
+                int time = evapoHistoryService.computeTimeToPump();
+                Command command = new Command("dev1","PUMP","ON", Integer.toString(time));
+                mqttControlService.publishCommand(command);
+
+            }
+        }, triggerContext -> {
+            String cronExp = helpService.getCronExpression();
+            System.out.println(cronExp);
             return new CronTrigger(cronExp).nextExecutionTime(triggerContext);
         });
     }

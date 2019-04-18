@@ -43,7 +43,7 @@ public class EvapoSingleService {
         return ET;
     }
 
-    public int comuteTimeToPump() {
+    public int computeTimeToPump() {
         Harvest harvest = harvestRepository.findTopByActive(true);
         Crop crop = cropRepository.findByName(harvest.getCrop());
         double kc = .0;

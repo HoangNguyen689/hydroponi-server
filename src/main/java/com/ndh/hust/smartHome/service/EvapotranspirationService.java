@@ -61,32 +61,9 @@ public class EvapotranspirationService {
     private double irrigationRate;
     private double irrigationFrequent;
 
-    private double computeET0(String dayInYear) {
-        ExtraterrestrialIrradiance ex = extraterrestrialIrradianceRepository.findByDayInYear(dayInYear);
-        double radiance = Double.valueOf(ex.getIrradiance());
-
-        List<Temperature> temps = temperatureRepository.findByDayInYear(dayInYear);
-
-        double maxTemp = 0,minTemp = 40;
-        for (Temperature t : temps) {
-            if (Double.valueOf(t.getTemperature()) > maxTemp) {
-                maxTemp = Double.valueOf(t.getTemperature());
-            }
-
-            if (Double.valueOf(t.getTemperature()) < minTemp) {
-                minTemp = Double.valueOf(t.getTemperature());
-            }
-        }
-
-        double avgTemp = (maxTemp + minTemp) / 2;
-
-        double ET = 0.0;
-
-        ET = 0.0023 * radiance * 0.0864 / 2.45 * (avgTemp + 17.8) * Math.sqrt(maxTemp - minTemp);
-
-        return ET;
+    private double computeET0(String dayOfYear) {
+        return extraterrestrialIrradianceRepository.findByDayOfYear(dayOfYear).getEvapo();
     }
-
 
     private void testPump() {
         crop = cropRepository.findByName(cropName);
@@ -95,18 +72,18 @@ public class EvapotranspirationService {
             ET0s.add(computeET0(Integer.toString(i)));
         }
 
-        Pm.add(Double.valueOf(precipitationRepository.findByYear("2018").getJan()));
-        Pm.add(Double.valueOf(precipitationRepository.findByYear("2018").getFeb()));
-        Pm.add(Double.valueOf(precipitationRepository.findByYear("2018").getMar()));
-        Pm.add(Double.valueOf(precipitationRepository.findByYear("2018").getApr()));
-        Pm.add(Double.valueOf(precipitationRepository.findByYear("2018").getMay()));
-        Pm.add(Double.valueOf(precipitationRepository.findByYear("2018").getJun()));
-        Pm.add(Double.valueOf(precipitationRepository.findByYear("2018").getJul()));
-        Pm.add(Double.valueOf(precipitationRepository.findByYear("2018").getAug()));
-        Pm.add(Double.valueOf(precipitationRepository.findByYear("2018").getSep()));
-        Pm.add(Double.valueOf(precipitationRepository.findByYear("2018").getOct()));
-        Pm.add(Double.valueOf(precipitationRepository.findByYear("2018").getNov()));
-        Pm.add(Double.valueOf(precipitationRepository.findByYear("2018").getDec()));
+        Pm.add(Double.valueOf(precipitationRepository.findByYear(2018).getJan()));
+        Pm.add(Double.valueOf(precipitationRepository.findByYear(2018).getFeb()));
+        Pm.add(Double.valueOf(precipitationRepository.findByYear(2018).getMar()));
+        Pm.add(Double.valueOf(precipitationRepository.findByYear(2018).getApr()));
+        Pm.add(Double.valueOf(precipitationRepository.findByYear(2018).getMay()));
+        Pm.add(Double.valueOf(precipitationRepository.findByYear(2018).getJun()));
+        Pm.add(Double.valueOf(precipitationRepository.findByYear(2018).getJul()));
+        Pm.add(Double.valueOf(precipitationRepository.findByYear(2018).getAug()));
+        Pm.add(Double.valueOf(precipitationRepository.findByYear(2018).getSep()));
+        Pm.add(Double.valueOf(precipitationRepository.findByYear(2018).getOct()));
+        Pm.add(Double.valueOf(precipitationRepository.findByYear(2018).getNov()));
+        Pm.add(Double.valueOf(precipitationRepository.findByYear(2018).getDec()));
 
 
         double SF = (0.531747 + 0.295164 * effectiveDepthRoot - 0.057697 * Math.pow(effectiveDepthRoot, 2) +

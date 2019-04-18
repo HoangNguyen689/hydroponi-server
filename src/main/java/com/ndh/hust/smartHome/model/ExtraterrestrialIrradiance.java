@@ -1,28 +1,26 @@
 package com.ndh.hust.smartHome.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "extraterrestrial_irradiance")
-@Setter
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExtraterrestrialIrradiance {
     @Id
     private String id;
 
-    private String year;
+    private String timeStamp;
 
-    private String month;
+    private int dayOfYear;
 
-    private String day;
+    private double irradiance;
 
-    private String dayInYear;
+    private double maxTemp;
 
-    private String irradiance;
+    private double minTemp;
+
+    private double evapo;
 }
