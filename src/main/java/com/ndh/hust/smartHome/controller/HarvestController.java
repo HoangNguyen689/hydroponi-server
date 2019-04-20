@@ -48,7 +48,6 @@ public class HarvestController {
     @GetMapping("/harvest")
     public String showHarvest(Model model) {
         model.addAttribute("harvest", harvestRepository.findTopByActive(true));
-        model.addAttribute("timeNow", timeService.getTimeNow());
         return "harvest";
     }
 }

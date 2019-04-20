@@ -30,6 +30,7 @@ public class MarkovService {
     private final int a0 = 0;
     private final int a1 = 1;
     private final int a2 = 2;
+    private final int a3 = 3;
 
     private double humidIncreaseByAction(int action) {
         double w = 0.0;
@@ -41,6 +42,9 @@ public class MarkovService {
                 w = 0.05;
                 break;
             case a2:
+                w = 0.1;
+                break;
+            case a3:
                 w = 0.2;
                 break;
         }
@@ -97,7 +101,7 @@ public class MarkovService {
         double reward = -200;
         double r;
         int action = 0;
-        for(i = 0; i <= 2; i++) {
+        for(i = 0; i <= 3; i++) {
             moisNext = moisCur + humidIncreaseByAction(i) - evarporationRate;
 
             if(THRESHOLE1 <= moisNext && moisNext <= THRESHOLE2) {
@@ -107,7 +111,8 @@ public class MarkovService {
                 penalty = 100;
             }
 
-            alpha = (humidIncreaseByAction(2) - humidIncreaseByAction(1)) / (0.1*(a2-a1));
+            alpha = (humidIncreaseByAction(2) - humidIncreaseByAction(1)) / (0.1*(a2-a1)) *
+                    (humidIncreaseByAction(3) - humidIncreaseByAction(2)) / (0.1*(a3-a2));
             r = -alpha * stateCurrent * evarporationRate * i - humidIncreaseByAction(i) - penalty;
 
             if(r > reward) {

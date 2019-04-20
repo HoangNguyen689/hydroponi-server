@@ -54,9 +54,9 @@ public class PumpControlService implements SchedulingConfigurer {
         threadPoolTaskScheduler.setPoolSize(10);
         threadPoolTaskScheduler.setThreadNamePrefix("schedule-thread");
         threadPoolTaskScheduler.initialize();
-//        jobMarkov(threadPoolTaskScheduler);
+        jobMarkov(threadPoolTaskScheduler);
 //        jobEvapoSingle(threadPoolTaskScheduler);
-        jobEvapoHistory(threadPoolTaskScheduler);
+//        jobEvapoHistory(threadPoolTaskScheduler);
         jobWaitForHarvestStart(threadPoolTaskScheduler);
         this.taskScheduler = threadPoolTaskScheduler;
         taskRegistrar.setTaskScheduler(threadPoolTaskScheduler);
