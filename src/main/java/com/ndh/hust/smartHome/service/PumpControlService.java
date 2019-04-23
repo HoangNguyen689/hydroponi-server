@@ -16,8 +16,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.ScheduledFuture;
 
-@Service
-@EnableScheduling
+//@Service
+//@EnableScheduling
 public class PumpControlService implements SchedulingConfigurer {
     @Autowired
     private MarkovService markovService;
