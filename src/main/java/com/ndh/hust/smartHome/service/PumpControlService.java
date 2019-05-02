@@ -16,8 +16,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.ScheduledFuture;
 
-//@Service
-//@EnableScheduling
+@Service
+@EnableScheduling
 public class PumpControlService implements SchedulingConfigurer {
     @Autowired
     private MarkovService markovService;
@@ -35,9 +35,6 @@ public class PumpControlService implements SchedulingConfigurer {
     private HarvestRepository harvestRepository;
 
     @Autowired
-    private TimeService timeService;
-
-    @Autowired
     private HelpService helpService;
 
 
@@ -51,11 +48,16 @@ public class PumpControlService implements SchedulingConfigurer {
     @Override
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
         ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
-        threadPoolTaskScheduler.setPoolSize(10);
+        threadPoolTaskScheduler.setPoolSize(50);
         threadPoolTaskScheduler.setThreadNamePrefix("schedule-thread");
         threadPoolTaskScheduler.initialize();
-//        jobMarkov(threadPoolTaskScheduler);
-//        jobEvapoSingle(threadPoolTaskScheduler);
+        Harvest harvest = harvestRepository.findTopByActive(true);
+        if (harvest.getMethod().equals("markov")) {
+            jobMarkov(threadPoolTaskScheduler);
+        }
+        else {
+            jobEvapoSingle(threadPoolTaskScheduler);
+        }
 //        jobEvapoHistory(threadPoolTaskScheduler);
         jobWaitForHarvestStart(threadPoolTaskScheduler);
         this.taskScheduler = threadPoolTaskScheduler;

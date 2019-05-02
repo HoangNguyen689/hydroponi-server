@@ -12,8 +12,7 @@
 <div class="container">
     <div th:replace="commons/header :: header">...</div>
 </div>
-<br>
-<div class="container text-center">
+<div class="container text-center" th:if="${currentUser == null}">
     <form class="form-signin" th:action="@{/login}" method="post">
         <label for="inputUsername" class="sr-only">Username</label>
         <input type="text" name="username" id="inputUsername" class="form-control" placeholder="username" required="/" />
@@ -22,7 +21,10 @@
         <button type="submit" class="btn btn-lg btn-primary btn-block btn-outline-success">Login</button>
     </form>
     <a href="/signup" >Signup here</a>
-
 </div>
+<div class="container text-center" style="margin-top: 30px" th:if="${currentUser}">
+    Already login!
+</div>
+
 </body>
 </html>

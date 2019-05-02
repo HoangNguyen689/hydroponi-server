@@ -5,13 +5,20 @@ import com.ndh.hust.smartHome.model.Crop;
 import com.ndh.hust.smartHome.model.domain.UserNDH;
 import com.ndh.hust.smartHome.service.userService.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 public class CropController {
@@ -30,6 +37,21 @@ public class CropController {
 
         model.addAttribute("crops", cropRepository.findAll());
         return "crop/all-crop";
+    }
+
+    @RequestMapping(value = "crop/all-crop/page/{page}")
+    public ModelAndView listCropsPageByPage(@PathVariable("page") int page) {
+        ModelAndView modelAndView = new ModelAndView("crop/all-crop-2");
+        PageRequest pageable = PageRequest.of(page - 1, 5);
+        Page<Crop> cropPage = cropRepository.findAll(pageable);
+        int totalPages = cropPage.getTotalPages();
+        if(totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1,totalPages).boxed().collect(Collectors.toList());
+            modelAndView.addObject("pageNumbers", pageNumbers);
+        }
+        modelAndView.addObject("activeCropList", true);
+        modelAndView.addObject("cropList", cropPage.getContent());
+        return modelAndView;
     }
 
     @RequestMapping("/crop/add-crop")
