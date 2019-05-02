@@ -37,10 +37,23 @@
                 <a class="nav-link disabled" href="#">Disabled</a>
             </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item" th:if="${currentUser == null}"><a class="nav-link" th:href="@{/login}">Log in</a></li>
+            <li class="nav-item" th:if="${currentUser}">
+                <form class="form-inline my-2 my-lg-0" th:action="@{/logout}" method="post">
+                    <a class="nav-link" th:text="${currentUser.getUsername()}"></a>
+                    <button class="btn btn-light my-2 my-sm-0" type="submit">Sign out</button>
+
+                </form>
+                <!--<form >-->
+                    <!--<input type="submit" value="Sign Out"/>-->
+                <!--</form>-->
+            </li>
+        </ul>
+        <!--<form class="form-inline my-2 my-lg-0">-->
+            <!--<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">-->
+            <!--<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->
+        <!--</form>-->
     </div>
 </nav>
 </body>

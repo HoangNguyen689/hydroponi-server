@@ -3,11 +3,14 @@ package com.ndh.hust.smartHome.controller;
 import com.ndh.hust.smartHome.Repository.CropRepository;
 import com.ndh.hust.smartHome.Repository.HarvestRepository;
 import com.ndh.hust.smartHome.model.Harvest;
-import com.ndh.hust.smartHome.service.TimeService;
+import com.ndh.hust.smartHome.model.domain.UserNDH;
+import com.ndh.hust.smartHome.service.userService.CustomUserDetailsService;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +27,7 @@ public class HarvestController {
     private CropRepository cropRepository;
 
     @Autowired
-    private TimeService timeService;
+    private CustomUserDetailsService userService;
 
     @RequestMapping("harvest-save")
     public String saveHarvest(Model model) {
@@ -47,6 +50,11 @@ public class HarvestController {
 
     @GetMapping("/harvest")
     public String showHarvest(Model model) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserNDH user = userService.findByUsername(auth.getName());
+        model.addAttribute("currentUser", user);
+
         model.addAttribute("harvest", harvestRepository.findTopByActive(true));
         return "harvest";
     }
