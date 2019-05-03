@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="commons/header :: head">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../../css/custom.css" />
+    <script src="../../../js/crop.js"></script>
 </head>
 <body>
 <div class="container">
@@ -8,48 +14,113 @@
 </div>
 <div class="container">
     <div class="row">
-        <div class="box">
-            <table class="table table-striped" th:if="${cropList != null && !cropList.isEmpty()}">
-                <thead>
-                <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Init</th>
-                    <th scope="col">Dev</th>
-                    <th scope="col">Mid</th>
-                    <th scope="col">Late</th>
-                    <th scope="col">Total</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="c : ${cropList}">
-                    <td th:text="${c.getName()}"></td>
-                    <td th:text="${c.getInit()}"></td>
-                    <td th:text="${c.getDev()}"></td>
-                    <td th:text="${c.getMid()}"></td>
-                    <td th:text="${c.getLate()}"></td>
-                    <td th:text="${c.getTotal()}"></td>
-                </tr>
-                </tbody>
-            </table>
+        <div class="col">
+            <div class="box">
+                <table class="table table-striped" th:if="${cropList != null && !cropList.isEmpty()}">
+                    <thead>
+                    <tr>
+                        <th scope="col" class="d-none">Id</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Init</th>
+                        <th scope="col">Dev</th>
+                        <th scope="col">Mid</th>
+                        <th scope="col">Late</th>
+                        <th scope="col">Total</th>
+                        <th scope="col" class="d-none">Kcinit</th>
+                        <th scope="col" class="d-none">Kcmid</th>
+                        <th scope="col" class="d-none">Kcend</th>
+                        <th scope="col">Modify</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="c : ${cropList}">
+                        <td class="d-none" th:text="${c.getId()}"></td>
+                        <td th:text="${c.getName()}"></td>
+                        <td th:text="${c.getInit()}"></td>
+                        <td th:text="${c.getDev()}"></td>
+                        <td th:text="${c.getMid()}"></td>
+                        <td th:text="${c.getLate()}"></td>
+                        <td th:text="${c.getTotal()}"></td>
+                        <td class="d-none" th:text="${c.getKcinit()}"></td>
+                        <td class="d-none" th:text="${c.getKcmid()}"></td>
+                        <td class="d-none" th:text="${c.getKcend()}"></td>
+                        <td>
+                            <button id="edit" class="btn btn-outline-info btn-sm">Edit</button>
+                            <button id="delete" class="btn btn-outline-danger btn-sm">Delete</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row" th:fragment="pagination" style="margin-top: 100px">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <nav aria-label="Pagination">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item" th:each="pageNumber : ${pageNumbers}" >
+                                <a class="page-link" th:href="@{|/crop/all-crop/page/${pageNumber}|}" th:text="${pageNumber}">1</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+
+        </div>
+        <div class="col-4">
+            <div class="container">
+                <form class="">
+                    <table class="table table-borderless">
+                        <thead>
+
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Name</td>
+                            <td><input id="name" type="text" class="form-control"/></td>
+                        </tr>
+                        <tr>
+                            <td>Init</td>
+                            <td><input id="init" type="text" class="form-control"/></td>
+                        </tr>
+                        <tr>
+                            <td>Dev</td>
+                            <td><input id="dev" type="text" class="form-control"/></td>
+                        </tr>
+                        <tr>
+                            <td>Mid</td>
+                            <td><input id="mid" type="text" class="form-control"/></td>
+                        </tr>
+                        <tr>
+                            <td>Late</td>
+                            <td><input id="late" type="text" class="form-control"/></td>
+                        </tr>
+                        <tr>
+                            <td>Kcinit</td>
+                            <td><input id="kcinit" type="text" class="form-control"/></td>
+                        </tr>
+                        <tr>
+                            <td>Kcmid</td>
+                            <td><input id="kcmid" type="text" class="form-control"/></td>
+                        </tr>
+                        <tr>
+                            <td>Kcend</td>
+                            <td><input id="kcend" type="text" class="form-control"/></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <button id="save" type="button" class="btn">Save</button>
+                    <button id="update" type="button" class="btn">Update</button>
+                    <div class="alert" role="alert" style="margin-top: 40px"/>
+                </form>
+            </div>
         </div>
     </div>
 
 
-    <div class="row" th:fragment="pagination">
-        <div class="col-md-2"></div>
-        <div class="col-md-8">
-            <nav aria-label="Pagination">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item" th:each="pageNumber : ${pageNumbers}" >
-                        <a class="page-link" th:href="@{|/all-crop/page/${pageNumber}|}" th:text="${pageNumber}">1</a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-        <div class="col-md-2"></div>
-    </div>
 
-    <p>Add a crop <a href="/crop/add-crop">here</a></p>
+
+    <!--<p>Add a crop <a href="/crop/add-crop">here</a></p>-->
 
 </div>
 </body>

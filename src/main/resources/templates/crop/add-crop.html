@@ -6,34 +6,49 @@
 </head>
 <body>
 <h1>Add a crop</h1>
-<form th:action="@{/crop/saveCrop}" method="POST" th:object="${crop}">
-    <div>
-        Name: <input type="text" th:field="*{name}"/>
+<div class="col-4">
+    <div class="container">
+        <form class="form-signin" th:action="@{/crop/saveCrop}" method="post" th:object="${crop}">
+            <table class="table table-borderless">
+                <tbody>
+                <tr>
+                    <td>Name</td>
+                    <td><input id="name" type="text" class="form-control" th:field="*{name}"/></td>
+                </tr>
+                <tr>
+                    <td>Init</td>
+                    <td><input id="init" type="text" class="form-control" th:field="*{init}"/></td>
+                </tr>
+                <tr>
+                    <td>Dev</td>
+                    <td><input id="dev" type="text" class="form-control" th:field="*{dev}"/></td>
+                </tr>
+                <tr>
+                    <td>Mid</td>
+                    <td><input id="mid" type="text" class="form-control" th:field="*{mid}"/></td>
+                </tr>
+                <tr>
+                    <td>Late</td>
+                    <td><input id="late" type="text" class="form-control" th:field="*{late}"/></td>
+                </tr>
+                <tr>
+                    <td>Kcinit</td>
+                    <td><input id="kcinit" type="text" class="form-control" th:field="*{kcinit}"/></td>
+                </tr>
+                <tr>
+                    <td>Kcmid</td>
+                    <td><input id="kcmid" type="text" class="form-control" th:field="*{kcmid}"/></td>
+                </tr>
+                <tr>
+                    <td>Kcend</td>
+                    <td><input id="kcend" type="text" class="form-control" th:field="*{kcend}"/></td>
+                </tr>
+                </tbody>
+            </table>
+            <input id="save" type="Submit" class="btn" value="Add crop"/>
+        </form>
     </div>
-    <div>
-        Init: <input type="text" th:field="*{init}" />
-    </div>
-    <div>
-        Dev: <input type="text" th:field="*{dev}" />
-    </div>
-    <div>
-        Mid: <input type="text" th:field="*{mid}" />
-    </div>
-    <div>
-        Late: <input type="text" th:field="*{late}" />
-    </div>
-    <div>
-        Kcinit: <input type="text" th:field="*{kcinit}" />
-    </div>
-    <div>
-        Kcmid: <input type="text" th:field="*{kcmid}" />
-    </div>
-    <div>
-        Kcend: <input type="text" th:field="*{kcend}" />
-    </div>
-
-    <input type="Submit" value="Submit"/>
-</form>
+</div>
 
 </body>
 </html>

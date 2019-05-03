@@ -7,13 +7,12 @@ import com.ndh.hust.smartHome.service.userService.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -21,6 +20,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Controller
+@RequestMapping("/crop")
 public class CropController {
     @Autowired
     private CropRepository cropRepository;
@@ -28,7 +28,7 @@ public class CropController {
     @Autowired
     private CustomUserDetailsService userService;
 
-    @RequestMapping("/crop/all-crop")
+    @GetMapping("/all-crop")
     public String allCrop(Model model) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -36,84 +36,81 @@ public class CropController {
         model.addAttribute("currentUser", user);
 
         model.addAttribute("crops", cropRepository.findAll());
+        model.addAttribute("crop", new Crop());
         return "crop/all-crop";
     }
 
-    @RequestMapping(value = "crop/all-crop/page/{page}")
-    public ModelAndView listCropsPageByPage(@PathVariable("page") int page) {
-        ModelAndView modelAndView = new ModelAndView("crop/all-crop-2");
+    @GetMapping(value = "/all-crop/page/{page}")
+    public String listCropsPageByPage(@PathVariable("page") int page, Model model) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserNDH user = userService.findByUsername(auth.getName());
+        model.addAttribute("currentUser", user);
+
         PageRequest pageable = PageRequest.of(page - 1, 5);
         Page<Crop> cropPage = cropRepository.findAll(pageable);
         int totalPages = cropPage.getTotalPages();
         if(totalPages > 0) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1,totalPages).boxed().collect(Collectors.toList());
-            modelAndView.addObject("pageNumbers", pageNumbers);
+            model.addAttribute("pageNumbers", pageNumbers);
         }
-        modelAndView.addObject("activeCropList", true);
-        modelAndView.addObject("cropList", cropPage.getContent());
-        return modelAndView;
+        model.addAttribute("activeCropList", true);
+        model.addAttribute("cropList", cropPage.getContent());
+        return "crop/all-crop-2";
     }
 
-    @RequestMapping("/crop/add-crop")
-    public String addCrop(Model model) {
-
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserNDH user = userService.findByUsername(auth.getName());
-        model.addAttribute("currentUser", user);
-
-        model.addAttribute("crop", new Crop());
-        return "crop/add-crop";
+    @CrossOrigin
+    @PostMapping("/all-crop")
+    @ResponseBody
+    public Crop insertCrop(@Valid @RequestBody Crop crop) {
+        return cropRepository.save(crop);
     }
 
-    @RequestMapping("/crop/saveCrop")
-    public String insertCrop(@ModelAttribute("Crop") Crop crop, Model model) {
-
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserNDH user = userService.findByUsername(auth.getName());
-        model.addAttribute("currentUser", user);
-
-        crop.setTotal(crop.getInit() + crop.getDev() + crop.getMid() + crop.getLate());
-        cropRepository.save(crop);
-        model.addAttribute("crops", cropRepository.findAll());
-        return "crop/all-crop";
+    @CrossOrigin
+    @GetMapping("/{id}")
+    public ResponseEntity<Crop> getCropById(@PathVariable("id") String id) {
+        Crop crop = cropRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid crop Id" + id));
+        if(crop == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().body(crop);
     }
 
-    @GetMapping("/crop/edit/{id}")
-    public String showUpdateForm(@PathVariable("id") String id, Model model ) {
-
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserNDH user = userService.findByUsername(auth.getName());
-        model.addAttribute("currentUser", user);
+    @CrossOrigin
+    @PostMapping("/{id}")
+    public ResponseEntity<Crop> updateCrop(@PathVariable("id") String id, @RequestBody @Valid Crop cropTemp) {
 
         Crop crop = cropRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid crop Id" + id));
-        model.addAttribute("crop", crop);
-        return "crop/update-crop";
+        if(crop == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        crop.setName(cropTemp.getName());
+        crop.setInit(cropTemp.getInit());
+        crop.setDev(cropTemp.getDev());
+        crop.setMid(cropTemp.getMid());
+        crop.setLate(cropTemp.getLate());
+        crop.setTotal(cropTemp.getInit() + cropTemp.getMid() + cropTemp.getDev() + cropTemp.getLate());
+        crop.setKcinit(cropTemp.getKcinit());
+        crop.setKcmid(cropTemp.getKcmid());
+        crop.setKcend(cropTemp.getKcend());
+        Crop updatedCrop = cropRepository.save(crop);
+
+        return ResponseEntity.ok(updatedCrop);
     }
 
-    @PostMapping("/crop/update/{id}")
-    public String updateCrop(@PathVariable("id") String id, @Valid Crop crop, Model model) {
-
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserNDH user = userService.findByUsername(auth.getName());
-        model.addAttribute("currentUser", user);
-
-        cropRepository.save(crop);
-        model.addAttribute("crops", cropRepository.findAll());
-        return "crop/all-crop";
-    }
-
-    @GetMapping("/crop/delete/{id}")
-    public String deleteCrop(@PathVariable("id") String id, Model model) {
-
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserNDH user = userService.findByUsername(auth.getName());
-        model.addAttribute("currentUser", user);
+    @CrossOrigin
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Crop> deleteCrop(@PathVariable(value = "id") String id) {
 
         Crop crop = cropRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid crop Id" + id));
+        if(crop == null) {
+            return ResponseEntity.notFound().build();
+        }
         cropRepository.delete(crop);
-        model.addAttribute("crops", cropRepository.findAll());
-        return "crop/all-crop";
+        return ResponseEntity.ok().build();
     }
 }

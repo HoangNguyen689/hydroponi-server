@@ -52,12 +52,12 @@ public class PumpControlService implements SchedulingConfigurer {
         threadPoolTaskScheduler.setThreadNamePrefix("schedule-thread");
         threadPoolTaskScheduler.initialize();
         Harvest harvest = harvestRepository.findTopByActive(true);
-        if (harvest.getMethod().equals("markov")) {
-            jobMarkov(threadPoolTaskScheduler);
-        }
-        else {
-            jobEvapoSingle(threadPoolTaskScheduler);
-        }
+//        if (harvest.getMethod().equals("markov")) {
+//            jobMarkov(threadPoolTaskScheduler);
+//        }
+//        else {
+//            jobEvapoSingle(threadPoolTaskScheduler);
+//        }
 //        jobEvapoHistory(threadPoolTaskScheduler);
         jobWaitForHarvestStart(threadPoolTaskScheduler);
         this.taskScheduler = threadPoolTaskScheduler;
