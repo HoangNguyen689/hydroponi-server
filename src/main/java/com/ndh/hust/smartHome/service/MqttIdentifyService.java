@@ -33,7 +33,7 @@ public class MqttIdentifyService extends MqttService {
 
     @Override
     public void messageArrived(String topic, MqttMessage message ) {
-        if (!topic.equals(subcribeTopic)) {
+        if (!topic.equals(subscribeTopic)) {
             log.info("Message is not in this topic!");
         }
         else {

@@ -10,20 +10,20 @@ public abstract class MqttService implements MqttCallback {
 
     MqttConnectOptions options = new MqttConnectOptions();
     IMqttClient mqttClient;
-    String subcribeTopic;
+    String subscribeTopic;
 
-    MqttService (String clientId, String subcribeTopic) {
+    MqttService (String clientId, String subscribeTopic) {
 
         options.setCleanSession(true);
 
-        this.subcribeTopic = subcribeTopic;
+        this.subscribeTopic = subscribeTopic;
 
         try {
             mqttClient = new MqttClient(broker, clientId);
             //log.info("Connecting to broker: " + broker);
             mqttClient.setCallback(this);
             mqttClient.connect(options);
-            mqttClient.subscribe(subcribeTopic);
+            mqttClient.subscribe(subscribeTopic);
         } catch (MqttException e) {
             e.printStackTrace();
         }
@@ -36,7 +36,7 @@ public abstract class MqttService implements MqttCallback {
         log.warn("Connection lost!");
         while (!mqttClient.isConnected()) {
             try {
-                Thread.sleep(500);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -44,7 +44,7 @@ public abstract class MqttService implements MqttCallback {
             try {
                 mqttClient.connect();
                 mqttClient.setCallback(this);
-                mqttClient.subscribe(subcribeTopic);
+                mqttClient.subscribe(subscribeTopic);
             } catch (MqttException e) {
                 e.printStackTrace();
             }

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Random;
 
-@RestController
+@Controller
 public class ChartController {
 //    @Autowired
 //    private RecordRepository recordRepository;
@@ -37,5 +37,10 @@ public class ChartController {
     @GetMapping(value = "/data", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getData() {
         return ResponseEntity.ok(new TemperatureChart());
+    }
+
+    @GetMapping("chart")
+    public String showChart(Model model) {
+        return "chart";
     }
 }

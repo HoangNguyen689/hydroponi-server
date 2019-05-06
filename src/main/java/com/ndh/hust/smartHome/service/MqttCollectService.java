@@ -9,6 +9,7 @@ import com.ndh.hust.smartHome.model.Record;
 import lombok.extern.log4j.Log4j2;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -19,6 +20,9 @@ import java.util.Date;
 @Service
 @Log4j2(topic = "MQTT_COLLECT")
 public class MqttCollectService extends MqttService {
+
+    @Autowired
+    private SimpMessagingTemplate template;
 
     @Autowired
     private RecordRepository repository;
@@ -36,7 +40,7 @@ public class MqttCollectService extends MqttService {
 
     @Override
     public void messageArrived(String topic, MqttMessage message ) {
-        if (!topic.equals(subcribeTopic)) {
+        if (!topic.equals(subscribeTopic)) {
             log.info("Message is not in this topic!");
         }
         else {
@@ -57,6 +61,8 @@ public class MqttCollectService extends MqttService {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            this.template.convertAndSend("/topic/temp", r.getTemperature());
 
             recordCount++;
 
@@ -86,6 +92,7 @@ public class MqttCollectService extends MqttService {
 
                 String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
                 rDAO.setTimeStamp(timeStamp);
+
 
                 try {
                     repository.insert(rDAO);
