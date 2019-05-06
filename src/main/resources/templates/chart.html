@@ -16,6 +16,9 @@
     <title>Chart</title>
 </head>
 <body>
+<div class="container">
+    <div th:replace="commons/header :: header">...</div>
+</div>
 
 <!--<div id="lineChart">-->
 <!--</div>-->
@@ -83,8 +86,18 @@
         <!--});-->
     <!--});-->
 <!--</script>-->
-<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+<div class="container">
+    <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+</div>
+<div class="container">
+    <div id="humid" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+</div>
+<div class="container">
+    <div id="moisture" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+</div>
 <script src="../js/custom.js"></script>
+<script src="../js/humid.js"></script>
+<script src="../js/moisture.js"></script>
 <!--<script>-->
     <!--$(function () {-->
         <!--$(document).ready(function () {-->

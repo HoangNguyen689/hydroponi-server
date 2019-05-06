@@ -38,6 +38,11 @@
     margin: auto;
 }
 
+.form-signin-heading {
+    margin-top: 100px;
+    margin-bottom: 10px;
+}
+
 .form-signin .form-control {
     position: relative;
     box-sizing: border-box;

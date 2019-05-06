@@ -3,9 +3,13 @@ package com.ndh.hust.smartHome.controller;
 import com.ndh.hust.smartHome.Chart.TemperatureChart;
 import com.ndh.hust.smartHome.Repository.RecordRepository;
 import com.ndh.hust.smartHome.model.Record;
+import com.ndh.hust.smartHome.model.domain.UserNDH;
+import com.ndh.hust.smartHome.service.userService.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +38,9 @@ public class ChartController {
 //        return ResponseEntity.ok(humid);
 //    }
 
+    @Autowired
+    private CustomUserDetailsService userService;
+
     @GetMapping(value = "/data", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getData() {
         return ResponseEntity.ok(new TemperatureChart());
@@ -41,6 +48,10 @@ public class ChartController {
 
     @GetMapping("chart")
     public String showChart(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserNDH user = userService.findByUsername(auth.getName());
+        model.addAttribute("currentUser", user);
+
         return "chart";
     }
 }

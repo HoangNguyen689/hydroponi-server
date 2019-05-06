@@ -63,6 +63,8 @@ public class MqttCollectService extends MqttService {
             }
 
             this.template.convertAndSend("/topic/temp", r.getTemperature());
+            this.template.convertAndSend("/topic/humid", r.getHumidity());
+            this.template.convertAndSend("/topic/moisture", r.getMoisture());
 
             recordCount++;
 

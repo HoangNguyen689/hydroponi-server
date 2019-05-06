@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ExtraterrestrialIrradianceRepository extends MongoRepository<ExtraterrestrialIrradiance, String> {
     @Nullable
-    ExtraterrestrialIrradiance findByDayOfYear(String dayOfYear);
+    ExtraterrestrialIrradiance findByDayOfYear(int dayOfYear);
 
     @Nullable
     List<ExtraterrestrialIrradiance> findByTimeStampBetween(String time1, String time2);

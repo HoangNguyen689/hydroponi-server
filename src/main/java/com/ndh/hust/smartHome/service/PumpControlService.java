@@ -52,14 +52,17 @@ public class PumpControlService implements SchedulingConfigurer {
         threadPoolTaskScheduler.setThreadNamePrefix("schedule-thread");
         threadPoolTaskScheduler.initialize();
         Harvest harvest = harvestRepository.findTopByActive(true);
+        if (harvest != null) {
+            jobEvapoHistory(threadPoolTaskScheduler);
+            jobWaitForHarvestStart(threadPoolTaskScheduler);
+
+        }
 //        if (harvest.getMethod().equals("markov")) {
 //            jobMarkov(threadPoolTaskScheduler);
 //        }
 //        else {
 //            jobEvapoSingle(threadPoolTaskScheduler);
 //        }
-//        jobEvapoHistory(threadPoolTaskScheduler);
-        jobWaitForHarvestStart(threadPoolTaskScheduler);
         this.taskScheduler = threadPoolTaskScheduler;
         taskRegistrar.setTaskScheduler(threadPoolTaskScheduler);
     }
@@ -138,13 +141,14 @@ public class PumpControlService implements SchedulingConfigurer {
                 }
                 System.out.println(Thread.currentThread().getName() + "The task3 excuted at" + new Date());
                 int time = evapoHistoryService.computeTimeToPump();
+//                System.out.println("time" + time);
                 Command command = new Command("dev1","PUMP","ON", Integer.toString(time));
                 mqttControlService.publishCommand(command);
 
             }
         }, triggerContext -> {
             String cronExp = helpService.getCronExpression();
-            System.out.println(cronExp);
+//            System.out.println(cronExp);
             return new CronTrigger(cronExp).nextExecutionTime(triggerContext);
         });
     }
@@ -153,6 +157,13 @@ public class PumpControlService implements SchedulingConfigurer {
         jobWaitForHarvestStart = taskScheduler.schedule(() -> {
             Date date = new Date();
             Harvest harvest = harvestRepository.findTopByActive(true);
+            if (harvest == null) {
+                try {
+                    wait(60 * 1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
             try {
                 Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(harvest.getTimeToStart());
                 Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(harvest.getTimeToEnd());

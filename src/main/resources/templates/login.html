@@ -13,6 +13,8 @@
     <div th:replace="commons/header :: header">...</div>
 </div>
 <div class="container text-center" th:if="${currentUser == null}">
+
+    <h2 class="form-signin-heading">Please login</h2>
     <form class="form-signin" th:action="@{/login}" method="post">
         <label for="inputUsername" class="sr-only">Username</label>
         <input type="text" name="username" id="inputUsername" class="form-control" placeholder="username" required="/" />

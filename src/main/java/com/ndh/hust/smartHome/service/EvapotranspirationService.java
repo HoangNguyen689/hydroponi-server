@@ -62,7 +62,7 @@ public class EvapotranspirationService {
     private double irrigationFrequent;
 
     private double computeET0(String dayOfYear) {
-        return extraterrestrialIrradianceRepository.findByDayOfYear(dayOfYear).getEvapo();
+        return extraterrestrialIrradianceRepository.findByDayOfYear(Integer.parseInt(dayOfYear)).getEvapo();
     }
 
     private void testPump() {

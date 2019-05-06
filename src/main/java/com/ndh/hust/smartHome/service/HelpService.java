@@ -16,10 +16,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class HelpService {
@@ -151,6 +148,10 @@ public class HelpService {
         int firstDay = 1;
 
         Harvest harvest = harvestRepository.findTopByActive(true);
+        if (harvest == null) {
+            return "";
+        }
+
         try {
             Date start = new SimpleDateFormat("yyyyy-MM-dd").parse(harvest.getTimeToStart());
             LocalDateTime startLocal = timeService.dateToLocalDateTime(start);
@@ -163,50 +164,59 @@ public class HelpService {
         }
 
         evapoHistoryService.init();
-//        Map<Integer, Integer> dayToPump = evapoHistoryService.irrigationFrequentList;
+        Map<Integer, Integer> dayToPump = evapoHistoryService.irrigationFrequentList;
 
-        Map<Integer, Integer> dayToPump = new HashMap<>();
-        for(int i = 1; i <= 12; i++) {
-            dayToPump.put(i, 1);
-        }
+//        dayToPump.forEach((key, value) -> System.out.println(key + ":" + value));
+
+//        evapoHistoryService.grossIrrigationList.forEach((key, value) -> System.out.println(key + ":" + value));
+
+//        evapoHistoryService.preEffectiveList.forEach((key, value) -> System.out.println(key + ":" + value));
+
+//        evapoHistoryService.evapoAvgDailyList.forEach((key, value) -> System.out.println(key + ":" + value));
+
+//        Map<Integer, Integer> dayToPump = new HashMap<>();
+//        for(int i = 1; i <= 12; i++) {
+//            dayToPump.put(i, 1);
+//        }
 
 
         switch (localDateTime.getMonthValue()) {
             case 1:
-                cronExp = "* * 16 " + firstDay + "/" + dayToPump.get(1) + " * ?";
+                cronExp = "0 0 16 " + firstDay + "/" + dayToPump.get(1) + " * ?";
                 break;
             case 2:
-                cronExp = "* * 16 " + firstDay + "/" + dayToPump.get(2) + " * ?";
+                cronExp = "0 0 16 " + firstDay + "/" + dayToPump.get(2) + " * ?";
                 break;
             case 3:
-                cronExp = "* * 16 " + firstDay + "/" + dayToPump.get(3) + " * ?";
+                cronExp = "0 0 16 " + firstDay + "/" + dayToPump.get(3) + " * ?";
                 break;
             case 4:
-                cronExp = "* * 16 " + firstDay + "/" + dayToPump.get(4) + " * ?";
+                cronExp = "0 0 16 " + firstDay + "/" + dayToPump.get(4) + " * ?";
                 break;
             case 5:
-                cronExp = "* * 16 " + firstDay + "/" + dayToPump.get(5) + " * ?";
+                cronExp = "0 0 16 " + firstDay + "/" + dayToPump.get(5) + " * ?";
+//                cronExp = "0/1 * * * * ?";
                 break;
             case 6:
-                cronExp = "* * 16 " + firstDay + "/" + dayToPump.get(6) + " * ?";
+                cronExp = "0 0 16 " + firstDay + "/" + dayToPump.get(6) + " * ?";
                 break;
             case 7:
-                cronExp = "* * 16 " + firstDay + "/" + dayToPump.get(7) + " * ?";
+                cronExp = "0 0 16 " + firstDay + "/" + dayToPump.get(7) + " * ?";
                 break;
             case 8:
-                cronExp = "* * 16 " + firstDay + "/" + dayToPump.get(8) + " * ?";
+                cronExp = "0 0 16 " + firstDay + "/" + dayToPump.get(8) + " * ?";
                 break;
             case 9:
-                cronExp = "* * 16 " + firstDay + "/" + dayToPump.get(9) + " * ?";
+                cronExp = "0 0 16 " + firstDay + "/" + dayToPump.get(9) + " * ?";
                 break;
             case 10:
-                cronExp = "* * 16 " + firstDay + "/" + dayToPump.get(10) + " * ?";
+                cronExp = "0 0 16 " + firstDay + "/" + dayToPump.get(10) + " * ?";
                 break;
             case 11:
-                cronExp = "* * 16 " + firstDay + "/" + dayToPump.get(11) + " * ?";
+                cronExp = "0 0 16 " + firstDay + "/" + dayToPump.get(11) + " * ?";
                 break;
             case 12:
-                cronExp = "* * 16 " + firstDay + "/" + dayToPump.get(12) + " * ?";
+                cronExp = "0 0 16 " + firstDay + "/" + dayToPump.get(12) + " * ?";
                 break;
         }
 

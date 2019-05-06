@@ -1,9 +1,11 @@
 package com.ndh.hust.smartHome.service;
 
 import com.ndh.hust.smartHome.Repository.CropRepository;
+import com.ndh.hust.smartHome.Repository.ExtraterrestrialIrradianceRepository;
 import com.ndh.hust.smartHome.Repository.HarvestRepository;
 import com.ndh.hust.smartHome.base.Constant;
 import com.ndh.hust.smartHome.model.Crop;
+import com.ndh.hust.smartHome.model.ExtraterrestrialIrradiance;
 import com.ndh.hust.smartHome.model.Harvest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,9 @@ public class EvapoSingleService {
 
     @Autowired
     private CropRepository cropRepository;
+
+    @Autowired
+    private ExtraterrestrialIrradianceRepository eiRepository;
 
     @Autowired
     private HelpService helpService;
@@ -36,7 +41,13 @@ public class EvapoSingleService {
 
         maxTemp = helpService.getMaxTemperature(timeService.getTimeYesterday(new Date()));
         minTemp = helpService.getMinTemperature(timeService.getTimeYesterday(new Date()));
-        radian = helpService.getAverageRadian(timeService.getTimeYesterday(new Date()));
+//        radian = helpService.getAverageRadian(timeService.getTimeYesterday(new Date()));
+
+        int dayOfYear = timeService.dateToLocalDateTime(timeService.getTimeNow()).getDayOfYear();
+
+        ExtraterrestrialIrradiance ei = eiRepository.findByDayOfYear(dayOfYear);
+
+        radian = ei.getIrradiance();
 
         ET = 0.0023 * radian * 0.0864 / 2.45 * ((maxTemp + minTemp)/2 + 17.8) * Math.sqrt(maxTemp - minTemp);
 

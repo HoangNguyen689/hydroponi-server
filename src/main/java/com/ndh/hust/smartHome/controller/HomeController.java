@@ -15,8 +15,11 @@ public class HomeController {
     @Autowired
     private CustomUserDetailsService userService;
 
-    @GetMapping(value="home")
-    public String home() {
+    @GetMapping(value="/home")
+    public String home(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserNDH userNDH = userService.findByUsername(auth.getName());
+        model.addAttribute("currentUser", userNDH);
         return "home";
     }
 

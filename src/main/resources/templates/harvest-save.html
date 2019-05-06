@@ -7,30 +7,40 @@
 <div class="container">
     <div th:replace="commons/header :: header">...</div>
 </div>
-<h1>Harvest</h1>
-<div>
-    <form th:action="@{/saveHarvest}" method="POST" th:object="${harvest}">
-        <div>
-            Crop:
-            <select th:field="*{crop}" >
-                <option th:each="c : ${cropModels}" th:value="${c.name}" th:text ="${c.name}" />
-            </select>
-        </div>
-        <div>
-            Time: <input type="date" th:field="*{timeToStart}" />
-        </div>
-        <div>
-            Pump Capacity: <input type="number" th:field="*{pumpCapacity}" />
-        </div>
-        <div>
-            Field Area: <input type="text" th:field="*{fieldArea}" />
-        </div>
-        <div>
-            Method: <input type="text" th:field="*{method}" />
-        </div>
+<div class="container">
+    <h2 style="margin-top: 50px;margin-bottom: 20px;margin-left:20px; text-align: left">Input data ...</h2>
+    <br>
+    <div class="col-md-6">
+        <form th:action="@{/saveHarvest}" method="POST" th:object="${harvest}">
 
-        <input type="Submit" value="Submit"/>
-    </form>
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>Crop</td>
+                <td>
+                    <select th:field="*{crop}" class="form-control">
+                        <option th:each="c : ${cropModels}" th:value="${c.name}" th:text ="${c.name}" />
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Time</td>
+                <td><input type="date" th:field="*{timeToStart}" class="form-control"/></td>
+            </tr>
+            <tr>
+                <td>Pump Capacity</td>
+                <td><input type="number" th:field="*{pumpCapacity}" class="form-control"/></td>
+            </tr>
+            <tr>
+                <td>Field Area</td>
+                <td><input type="text" th:field="*{fieldArea}" class="form-control"/></td>
+            </tr>
+            </tbody>
+        </table>
+            <input class="btn btn-outline-info" type="Submit" value="Add harvest"/>
+        </form>
+
+    </div>
 
 </div>
 </body>

@@ -33,18 +33,18 @@ public class EvapoHistoryService {
 
     Map<Integer, Integer> irrigationFrequentList = new HashMap<>();
 
-    private double irrigationEffectiveMethod = 1;
+    private double irrigationEffectiveMethod = 0.8;
 
     private double MAD = 0.5;
 
-    private double TAW = 0.5;
+    private double TAW = 15;
 
     public void init() {
         for(int i = 1; i <= 12; i++) {
             evapoAvgDailyList.put(i, helpService.getEvapoAvgDaily(i));
         }
 
-        Precipitation precipitation = precipitationRepository.findByYear(2018);
+        Precipitation precipitation = precipitationRepository.findByYear(2017);
         double kChangePreci = 0.75;
         int year = 2018;
 
@@ -62,9 +62,19 @@ public class EvapoHistoryService {
         preEffectiveList.put(12,kChangePreci * precipitation.getOct() / YearMonth.of(year,12).lengthOfMonth());
 
         for(int i = 1; i <= 12; i++) {
-            netIrrigationList.put(i, evapoAvgDailyList.get(i) - preEffectiveList.get(i));
+            double net;
+            net = evapoAvgDailyList.get(i) - preEffectiveList.get(i);
+            if (net < 0) {
+                net = 0;
+            }
+            netIrrigationList.put(i, net);
             grossIrrigationList.put(i, netIrrigationList.get(i) / irrigationEffectiveMethod);
-            irrigationFrequentList.put(i, (int) (MAD * TAW / grossIrrigationList.get(i)));
+            if (net == 0) {
+                irrigationFrequentList.put(i, 15);
+
+            }
+            irrigationFrequentList.put(i, (int) Math.floor(MAD * TAW / grossIrrigationList.get(i)));
+
         }
 
     }
@@ -79,7 +89,7 @@ public class EvapoHistoryService {
 
         double precipitationRate = flowRate / effectiveWetDiameter;
 
-        int irrigationRate = (int) (MAD * TAW / precipitationRate);
+        int irrigationRate = ((int) (MAD * TAW * 0.001/ precipitationRate)) * 60;
 
         return irrigationRate;
 
