@@ -7,6 +7,7 @@ import com.mongodb.MongoException;
 import com.ndh.hust.smartHome.Repository.RecordRepository;
 import com.ndh.hust.smartHome.model.Record;
 import lombok.extern.log4j.Log4j2;
+import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -32,6 +33,13 @@ public class MqttCollectService extends MqttService {
 
     MqttCollectService() {
         super("COLLECT_SERVICE_ID", "MQTT_COLLECT_NDH");
+        try {
+//            options.setCleanSession(true);
+            mqttClient.connect(options);
+            mqttClient.subscribe("MQTT_COLLECT_NDH");
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
         if(mqttClient.isConnected()) {
             log.info("Connected. Ready to collect data!");
         }

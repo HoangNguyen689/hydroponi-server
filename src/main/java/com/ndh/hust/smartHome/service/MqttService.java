@@ -14,16 +14,16 @@ public abstract class MqttService implements MqttCallback {
 
     MqttService (String clientId, String subscribeTopic) {
 
-        options.setCleanSession(true);
+//        options.setCleanSession(true);
 
         this.subscribeTopic = subscribeTopic;
 
         try {
             mqttClient = new MqttClient(broker, clientId);
-            //log.info("Connecting to broker: " + broker);
+//            log.info("Connecting to broker: " + broker);
             mqttClient.setCallback(this);
-            mqttClient.connect(options);
-            mqttClient.subscribe(subscribeTopic);
+//            mqttClient.connect(options);
+//            mqttClient.subscribe(subscribeTopic);
         } catch (MqttException e) {
             e.printStackTrace();
         }

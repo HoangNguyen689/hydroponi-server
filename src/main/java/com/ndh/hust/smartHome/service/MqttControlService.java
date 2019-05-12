@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ndh.hust.smartHome.model.Command;
 import lombok.extern.log4j.Log4j2;
 import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,6 +14,11 @@ public class MqttControlService extends MqttService {
 
     MqttControlService() {
         super("CONTROL_SERVICE_ID", "A");
+        try {
+            mqttClient.connect();
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
         if(mqttClient.isConnected()) {
             log.info("Connected. Ready to send command!");
         }
@@ -29,7 +35,10 @@ public class MqttControlService extends MqttService {
         }
 
         try {
-            mqttClient.publish("MQTT_CONTROL_NDH", commandJson.getBytes(), 0, true);
+            MqttMessage mes = new MqttMessage();
+            mes.setRetained(false);
+            mes.setPayload(commandJson.getBytes());
+            mqttClient.publish("MQTT_CONTROL_NDH", mes);
             log.info(commandJson);
 
         } catch (MqttException e) {
