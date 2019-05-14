@@ -2,6 +2,7 @@ package com.ndh.hust.smartHome.database;
 
 import com.mongodb.MongoClient;
 import com.ndh.hust.smartHome.Repository.RecordRepository;
+import com.ndh.hust.smartHome.model.Device;
 import com.ndh.hust.smartHome.model.Record;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -27,6 +28,10 @@ public class testMongo {
 //            e.printStackTrace();
 //        }
 //        extraterrestrialIrradianceRepository.save(new ExtraterrestrialIrradiance());
-        repository.save(new Record());
+//        repository.save(new Record());
+        Device dev = new Device();
+        dev.setUsername("dev1");
+        dev.setPassword("dev1");
+        mongoTemplate.insert(dev,"device");
     }
 }

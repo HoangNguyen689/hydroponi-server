@@ -111,8 +111,12 @@ public class MarkovService {
                 penalty = 100;
             }
 
-            alpha = (humidIncreaseByAction(2) - humidIncreaseByAction(1)) / (0.1*(a2-a1)) *
-                    (humidIncreaseByAction(3) - humidIncreaseByAction(2)) / (0.1*(a3-a2));
+            if (moisCur < 0.68) {
+                alpha = (humidIncreaseByAction(2) - humidIncreaseByAction(1)) / (0.1*(a2-a1));
+            } else {
+                alpha = (humidIncreaseByAction(3) - humidIncreaseByAction(2)) / (0.1*(a3-a2));
+            }
+
             r = -alpha * stateCurrent * evarporationRate * i - humidIncreaseByAction(i) - penalty;
 
             if(r > reward) {

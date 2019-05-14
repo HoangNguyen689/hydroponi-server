@@ -53,8 +53,14 @@ public class PumpControlService implements SchedulingConfigurer {
         threadPoolTaskScheduler.initialize();
         Harvest harvest = harvestRepository.findTopByActive(true);
         if (harvest != null) {
-            jobEvapoHistory(threadPoolTaskScheduler);
             jobWaitForHarvestStart(threadPoolTaskScheduler);
+
+            if (harvest.getMethod().equals("markov")) {
+                jobMarkov(threadPoolTaskScheduler);
+            } else {
+                jobEvapoSingle(threadPoolTaskScheduler);
+            }
+//            jobEvapoHistory(threadPoolTaskScheduler);
 
         }
 //        if (harvest.getMethod().equals("markov")) {
@@ -95,7 +101,7 @@ public class PumpControlService implements SchedulingConfigurer {
 
             }
         }, triggerContext -> {
-            String cronExp="0/5 * * * * ?";
+            String cronExp="0 * * * * ?";
             return new CronTrigger(cronExp).nextExecutionTime(triggerContext);
         });
     }
@@ -121,7 +127,7 @@ public class PumpControlService implements SchedulingConfigurer {
 
             }
         }, triggerContext -> {
-            String cronExp="0/10 * * * * ?";
+            String cronExp="0 * * * * ?";
             return new CronTrigger(cronExp).nextExecutionTime(triggerContext);
         });
     }

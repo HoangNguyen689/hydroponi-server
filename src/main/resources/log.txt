@@ -1,0 +1,12 @@
+{"id":null,"deviceId":"dev1","actuatorName":"PUMP","action":"ON","additional":"10","timeStamp":"Tue May 14 20:49:00 ICT 2019"}
+{"id":null,"deviceId":"dev1","actuatorName":"PUMP","action":"ON","additional":"10","timeStamp":"Tue May 14 20:50:00 ICT 2019"}
+{"id":null,"deviceId":"dev1","actuatorName":"PUMP","action":"ON","additional":"10","timeStamp":"Tue May 14 20:51:00 ICT 2019"}
+{"id":null,"deviceId":"dev1","actuatorName":"PUMP","action":"ON","additional":"10","timeStamp":"Tue May 14 20:52:00 ICT 2019"}
+{"id":null,"deviceId":"dev1","actuatorName":"PUMP","action":"ON","additional":"10","timeStamp":"Tue May 14 20:53:00 ICT 2019"}
+{"id":null,"deviceId":"dev1","actuatorName":"PUMP","action":"ON","additional":"83","timeStamp":"Tue May 14 20:56:00 ICT 2019"}
+{"id":null,"deviceId":"dev1","actuatorName":"PUMP","action":"ON","additional":"83","timeStamp":"Tue May 14 20:57:00 ICT 2019"}
+{"id":null,"deviceId":"dev1","actuatorName":"PUMP","action":"ON","additional":"83","timeStamp":"Tue May 14 20:58:00 ICT 2019"}
+{"id":null,"deviceId":"dev1","actuatorName":"PUMP","action":"ON","additional":"83","timeStamp":"Tue May 14 20:59:00 ICT 2019"}
+{"id":null,"deviceId":"dev1","actuatorName":"PUMP","action":"ON","additional":"83","timeStamp":"Tue May 14 21:00:00 ICT 2019"}
+{"id":null,"deviceId":"dev1","actuatorName":"PUMP","action":"ON","additional":"83","timeStamp":"Tue May 14 21:01:00 ICT 2019"}
+{"id":null,"deviceId":"dev1","actuatorName":"PUMP","action":"ON","additional":"83","timeStamp":"Tue May 14 21:02:00 ICT 2019"}

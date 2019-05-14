@@ -45,7 +45,12 @@ public class HarvestController {
         harvest.setDayOfYear(dayOfYear);
         harvest.setTimeToEnd(dtf.print(dt.plusDays(cropRepository.findByName(harvest.getCrop()).getTotal())));
         harvest.setActive(true);
-        harvest.setMethod("markov");
+        if (harvest.getFieldArea() <= 1000) {
+            harvest.setMethod("markov");
+        } else {
+            harvest.setMethod("evapo");
+        }
+
         harvestRepository.save(harvest);
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

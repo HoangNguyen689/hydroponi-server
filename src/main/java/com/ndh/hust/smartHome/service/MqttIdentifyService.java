@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.mongodb.MongoException;
+import com.ndh.hust.smartHome.Repository.DeviceRepository;
 import com.ndh.hust.smartHome.Repository.RecordRepository;
+import com.ndh.hust.smartHome.model.Device;
 import com.ndh.hust.smartHome.model.Record;
 import lombok.extern.log4j.Log4j2;
 import org.eclipse.paho.client.mqttv3.*;
@@ -19,6 +21,9 @@ import java.util.Calendar;
 @Service
 @Log4j2(topic = "MQTT_IDENTIFY")
 public class MqttIdentifyService extends MqttService {
+
+    @Autowired
+    private DeviceRepository devRepo;
 
     MqttIdentifyService() {
         super("IDENTIFY_SERVICE_ID", "MQTT_IDENTIFY_NDH");
@@ -59,7 +64,9 @@ public class MqttIdentifyService extends MqttService {
 
 
             String reply = "";
-            if (userName.equals("dev1")  && passWord.equals("dev1") ) {
+            Device dev = devRepo.findByUsername(userName);
+
+            if (dev != null && dev.getPassword().equals(passWord)) {
                 reply = "{\"message\" : \"OK\"}";
             } else {
                 reply = "{\"message\" : \"NO\"}";

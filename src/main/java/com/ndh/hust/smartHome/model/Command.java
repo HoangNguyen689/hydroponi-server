@@ -1,9 +1,13 @@
 package com.ndh.hust.smartHome.model;
 
 
+import com.ndh.hust.smartHome.service.HelpService;
+import com.ndh.hust.smartHome.service.TimeService;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,5 +33,7 @@ public class Command {
         this.actuatorName = actuatorName;
         this.action = action;
         this.additional = additional;
+        this.timeStamp = new Date().toString();
     }
+
 }
