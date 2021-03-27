@@ -41,27 +41,33 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers("/login").permitAll()
-                .antMatchers("/register").permitAll()
-                .antMatchers("/harvest/**").hasAuthority("ADMIN")
-                .antMatchers("/crop/**").hasAuthority("ADMIN")
+                .antMatchers("/", "/login", "/register").permitAll()
+                .antMatchers("/harvest/**", "/crop/**").hasAuthority("ADMIN")
                 .anyRequest()
                 .authenticated().and().csrf().disable().formLogin().successHandler(customizeAuthenticationSuccessHandler)
                 .loginPage("/login").failureUrl("/login?error=true")
                 .usernameParameter("username")
-                .passwordParameter("password")
-                .and().logout()
+                .passwordParameter("password").and();
+
+        // Logout setup
+        http
+                .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/").and().exceptionHandling()
-        ;
+                .logoutSuccessUrl("/");
     }
 
+    // Skip check authentication with static resource
     @Override
     public void configure(WebSecurity web) throws Exception {
         web
                 .ignoring()
-                .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
+                .antMatchers(
+                        "/resources/**",
+                        "/static/**",
+                        "/css/**",
+                        "/js/**",
+                        "/images/**"
+                );
     }
 
 }
