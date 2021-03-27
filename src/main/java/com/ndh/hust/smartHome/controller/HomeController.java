@@ -1,6 +1,6 @@
 package com.ndh.hust.smartHome.controller;
 
-import com.ndh.hust.smartHome.model.domain.UserNDH;
+import com.ndh.hust.smartHome.model.domain.User;
 import com.ndh.hust.smartHome.service.userService.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -15,18 +15,10 @@ public class HomeController {
     @Autowired
     private CustomUserDetailsService userService;
 
-    @GetMapping(value="/home")
-    public String home(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserNDH userNDH = userService.findByUsername(auth.getName());
-        model.addAttribute("currentUser", userNDH);
-        return "home";
-    }
-
     @GetMapping(value = "/")
     public String index(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserNDH userNDH = userService.findByUsername(auth.getName());
+        User userNDH = userService.findByUsername(auth.getName());
         model.addAttribute("currentUser", userNDH);
         return "index";
     }

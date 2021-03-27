@@ -3,7 +3,7 @@ package com.ndh.hust.smartHome.controller;
 import com.ndh.hust.smartHome.Repository.CropRepository;
 import com.ndh.hust.smartHome.Repository.HarvestRepository;
 import com.ndh.hust.smartHome.model.Harvest;
-import com.ndh.hust.smartHome.model.domain.UserNDH;
+import com.ndh.hust.smartHome.model.domain.User;
 import com.ndh.hust.smartHome.service.userService.CustomUserDetailsService;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -54,7 +54,7 @@ public class HarvestController {
         harvestRepository.save(harvest);
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserNDH user = userService.findByUsername(auth.getName());
+        User user = userService.findByUsername(auth.getName());
         model.addAttribute("currentUser", user);
 
         return "index";
@@ -64,7 +64,7 @@ public class HarvestController {
     public String showHarvest(Model model) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserNDH user = userService.findByUsername(auth.getName());
+        User user = userService.findByUsername(auth.getName());
         model.addAttribute("currentUser", user);
         model.addAttribute("harvest", harvestRepository.findTopByActive(true));
         return "harvest";
@@ -77,7 +77,7 @@ public class HarvestController {
         harvestRepository.save(harvest);
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserNDH user = userService.findByUsername(auth.getName());
+        User user = userService.findByUsername(auth.getName());
         model.addAttribute("currentUser", user);
 
         return "index";

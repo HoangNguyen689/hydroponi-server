@@ -1,6 +1,6 @@
 package com.ndh.hust.smartHome.controller;
 
-import com.ndh.hust.smartHome.model.domain.UserNDH;
+import com.ndh.hust.smartHome.model.domain.User;
 import com.ndh.hust.smartHome.service.userService.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -25,7 +25,7 @@ public class LoginController {
         modelAndView.setViewName("login");
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserNDH user = userService.findByUsername(auth.getName());
+        User user = userService.findByUsername(auth.getName());
         modelAndView.addObject("currentUser", user);
 
         return modelAndView;
@@ -34,24 +34,24 @@ public class LoginController {
     @GetMapping(value = "/signup")
     public ModelAndView signup() {
         ModelAndView modelAndView = new ModelAndView();
-        UserNDH userNDH = new UserNDH();
+        User userNDH = new User();
         modelAndView.addObject("userNDH", userNDH);
         modelAndView.setViewName("signup");
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserNDH user = userService.findByUsername(auth.getName());
+        User user = userService.findByUsername(auth.getName());
         modelAndView.addObject("currentUser", user);
 
         return modelAndView;
     }
 
     @PostMapping(value = "/signup")
-    public ModelAndView createNewUser(@Valid UserNDH userNDH, BindingResult bindingResult) {
+    public ModelAndView createNewUser(@Valid User userNDH, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
-        UserNDH userExist = userService.findByUsername(userNDH.getUsername());
+        User userExist = userService.findByUsername(userNDH.getUsername());
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserNDH user = userService.findByUsername(auth.getName());
+        User user = userService.findByUsername(auth.getName());
         modelAndView.addObject("currentUser", user);
 
         if (userExist != null) {
@@ -65,7 +65,7 @@ public class LoginController {
         } else {
             userService.saveUser(userNDH);
             modelAndView.addObject("successMessage", "User has been registered successfully");
-            modelAndView.addObject("userNDH", new UserNDH());
+            modelAndView.addObject("userNDH", new User());
             modelAndView.setViewName("login");
         }
 

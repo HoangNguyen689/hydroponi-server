@@ -1,13 +1,12 @@
 package com.ndh.hust.smartHome.service.userService;
 
 import com.ndh.hust.smartHome.Repository.RoleRepository;
-import com.ndh.hust.smartHome.Repository.UserNDHRepository;
+import com.ndh.hust.smartHome.Repository.UserRepository;
 import com.ndh.hust.smartHome.model.domain.Role;
-import com.ndh.hust.smartHome.model.domain.UserNDH;
+import com.ndh.hust.smartHome.model.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,7 +21,7 @@ import java.util.*;
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private UserNDHRepository userNDHRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private RoleRepository roleRepository;
@@ -30,28 +29,28 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserNDH findByUsername(String username) {
-        return userNDHRepository.findByUsername(username);
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
-    public void saveUser(UserNDH userNDH) {
+    public void saveUser(User userNDH) {
         userNDH.setPassword(bCryptPasswordEncoder.encode(userNDH.getPassword()));
         userNDH.setEnabled(true);
         Role userNDHRole = roleRepository.findByRole("ADMIN");
         userNDH.setRoles(new HashSet<>(Arrays.asList(userNDHRole)));
-        userNDHRepository.save(userNDH);
+        userRepository.save(userNDH);
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserNDH user = userNDHRepository.findByUsername(username);
+        User user = userRepository.findByUsername(username);
 
         if (user == null) {
             throw new UsernameNotFoundException("Username not found!");
         }
 
         List<GrantedAuthority> authorities = getUserAuthority(user.getRoles());
-        return new User(user.getUsername(), user.getPassword(), authorities);
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
     }
 
     private List<GrantedAuthority> getUserAuthority(Set<Role> userNDHRole) {

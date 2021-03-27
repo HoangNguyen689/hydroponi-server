@@ -2,7 +2,7 @@ package com.ndh.hust.smartHome.controller;
 
 import com.ndh.hust.smartHome.Repository.CropRepository;
 import com.ndh.hust.smartHome.model.Crop;
-import com.ndh.hust.smartHome.model.domain.UserNDH;
+import com.ndh.hust.smartHome.model.domain.User;
 import com.ndh.hust.smartHome.service.userService.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,7 +32,7 @@ public class CropController {
     public String allCrop(Model model) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserNDH user = userService.findByUsername(auth.getName());
+        User user = userService.findByUsername(auth.getName());
         model.addAttribute("currentUser", user);
 
         model.addAttribute("crops", cropRepository.findAll());
@@ -44,7 +44,7 @@ public class CropController {
     public String listCropsPageByPage(@PathVariable("page") int page, Model model) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserNDH user = userService.findByUsername(auth.getName());
+        User user = userService.findByUsername(auth.getName());
         model.addAttribute("currentUser", user);
 
         PageRequest pageable = PageRequest.of(page - 1, 5);

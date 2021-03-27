@@ -15,11 +15,11 @@ import java.util.Set;
 @Document
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserNDH {
+public class User {
     @Id
     private String id;
 
-    @Indexed(unique = true, direction = IndexDirection.DESCENDING, dropDups = true)
+    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     private String username;
 
     private String password;
