@@ -31,28 +31,28 @@ public class LoginController {
         return modelAndView;
     }
 
-    @GetMapping(value = "/signup")
-    public ModelAndView signup() {
+    @GetMapping(value = "/register")
+    public ModelAndView register() {
         ModelAndView modelAndView = new ModelAndView();
-        User userNDH = new User();
-        modelAndView.addObject("userNDH", userNDH);
-        modelAndView.setViewName("signup");
+        User user = new User();
+        modelAndView.addObject("userNDH", user);
+        modelAndView.setViewName("register");
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.findByUsername(auth.getName());
-        modelAndView.addObject("currentUser", user);
+        User registeredUser = userService.findByUsername(auth.getName());
+        modelAndView.addObject("currentUser", registeredUser);
 
         return modelAndView;
     }
 
-    @PostMapping(value = "/signup")
-    public ModelAndView createNewUser(@Valid User userNDH, BindingResult bindingResult) {
+    @PostMapping(value = "/register")
+    public ModelAndView createNewUser(@Valid User user, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
-        User userExist = userService.findByUsername(userNDH.getUsername());
+        User userExist = userService.findByUsername(user.getUsername());
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.findByUsername(auth.getName());
-        modelAndView.addObject("currentUser", user);
+        User registeredUser = userService.findByUsername(auth.getName());
+        modelAndView.addObject("currentUser", registeredUser);
 
         if (userExist != null) {
             bindingResult
@@ -61,9 +61,9 @@ public class LoginController {
         }
 
         if (bindingResult.hasErrors()) {
-            modelAndView.setViewName("signup");
+            modelAndView.setViewName("register");
         } else {
-            userService.saveUser(userNDH);
+            userService.saveUser(user);
             modelAndView.addObject("successMessage", "User has been registered successfully");
             modelAndView.addObject("userNDH", new User());
             modelAndView.setViewName("login");
